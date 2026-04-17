@@ -1,337 +1,274 @@
-
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ASLAN-X | Illuminati Core</title>
+    <title>ASLAN-X | Global Protocol</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --gold: #f59e0b; --bg: #000; --card: #111; }
-        * { -webkit-tap-highlight-color: transparent; user-select: none; font-family: 'Segoe UI', Roboto, sans-serif; }
-        
-        body { background-color: var(--bg); color: white; margin: 0; overflow: hidden; height: 100vh; }
+        :root { --gold: #f59e0b; --bg: #000; }
+        * { -webkit-tap-highlight-color: transparent; user-select: none; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* Hamster Style Stats */
-        .stat-box { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; }
+        /* The 6-Dot Menu Button */
+        .dots-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 24px; cursor: pointer; }
+        .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 5px var(--gold); }
 
-        /* 3D Glowing Mining Orb with Morphing Effect */
-        .orb-wrapper { position: relative; width: 280px; height: 280px; cursor: pointer; }
+        /* Professional Dashboard & Menu Overlay */
+        #sideMenu { transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sideMenu.active { transform: translateX(0); }
+
+        /* Morphing Illuminati Orb */
         .orb-outer {
-            width: 100%; height: 100%;
+            width: 280px; height: 280px;
             background: radial-gradient(circle, #f59e0b 0%, #78350f 70%, #000 100%);
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             animation: morph 8s linear infinite;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 80px rgba(245, 158, 11, 0.3);
-            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
+            box-shadow: 0 0 60px rgba(245, 158, 11, 0.2);
+            transition: transform 0.1s;
         }
         @keyframes morph {
             0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
             50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
-            75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
         }
-        .orb-outer:active { transform: scale(0.92) rotate(3deg); }
-        
-        /* NEW Cyber Illuminati Symbol */
-        .orb-inner-symbol {
-            position: relative;
-            width: 150px; height: 130px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            filter: drop-shadow(0 0 15px rgba(245,158,11,0.8));
-        }
-        
-        /* Pyramid Shape (Outer Lines) */
-        .pyramid-lines {
-            position: absolute; inset: 0;
-            background: var(--gold);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%, 50% 0%, 50% 10%, 85% 90%, 15% 90%, 50% 10%);
-            opacity: 0.9;
-        }
-        
-        /* The Eye/Core (Center) */
-        .eye-core {
-            width: 35px; height: 35px;
-            background: #fff;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 0 25px #fff, 0 0 50px var(--gold);
-            animation: core-pulse 2s infinite;
-            z-index: 2; margin-top: 30px;
-        }
-        @keyframes core-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
-        
-        /* Horizon Line (Cyber Style) */
-        .pyramid-horizon {
-            position: absolute; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
-            top: 70%; z-index: 1; opacity: 0.5;
-        }
+        .orb-outer:active { transform: scale(0.92); }
 
-        /* Floating Numbers Animation */
-        .coin-pop {
-            position: absolute; color: white; font-weight: 900; font-size: 36px;
-            pointer-events: none; animation: popUp 0.8s ease-out forwards; z-index: 100;
-            text-shadow: 0 0 10px var(--gold), 0 0 20px #fff;
-        }
-        @keyframes popUp { 
-            from { opacity: 1; transform: translateY(0) scale(1); } 
-            to { opacity: 0; transform: translateY(-160px) scale(0.8); } 
-        }
-
-        /* Bottom Nav */
-        .nav-bar { background: rgba(10,10,10,0.98); backdrop-filter: blur(15px); height: 85px; border-top: 1px solid rgba(245,158,11,0.1); }
-        .nav-item { color: #444; transition: 0.3s; }
-        .nav-item.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        /* Coin Pop Animation */
+        .coin-pop { position: absolute; color: white; font-weight: 900; font-size: 32px; pointer-events: none; 
+                    animation: popUp 0.7s ease-out forwards; text-shadow: 0 0 10px var(--gold); }
+        @keyframes popUp { to { opacity: 0; transform: translateY(-120px); } }
 
         .hidden-page { display: none; }
-        input { background: #111; border: 1px solid #222; color: #fff; text-align: center; border-radius: 15px; }
-        input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 10px rgba(245,158,11,0.3); }
-        
-        /* PPH Counter Style */
-        .pph-badge { background: rgba(22, 163, 74, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
-<body onclick="enableFS()">
+<body>
 
-    <div id="loginPage" class="fixed inset-0 z-[1000] bg-black flex flex-col items-center justify-center p-8">
-        <div class="mb-14 text-center">
-            <div class="w-24 h-24 bg-black rounded-[35px] mx-auto flex items-center justify-center mb-6 border-2 border-amber-500 shadow-[0_0_60px_rgba(245,158,11,0.3)]">
-                <div class="relative w-12 h-10 filter drop-shadow(0 0 5px var(--gold))">
-                    <div class="absolute inset-0 bg-amber-500 clip-path-[polygon(50%_0%,0%_100%,100%_100%)] opacity-80"></div>
-                    <div class="absolute w-3 h-3 bg-white rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+    <div id="sideMenu" class="fixed inset-0 z-[2000] bg-black/95 flex justify-end">
+        <div class="w-[85%] h-full bg-[#0a0a0a] border-l border-white/10 p-6 flex flex-col">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="text-amber-500 font-black italic tracking-widest">DASHBOARD</h3>
+                <button onclick="toggleMenu()" class="text-2xl text-white">&times;</button>
+            </div>
+            
+            <div class="space-y-6 flex-1 overflow-y-auto">
+                <div class="glass p-4 rounded-2xl">
+                    <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase">Core Status</p>
+                    <div class="flex justify-between items-center">
+                        <span id="dashName" class="text-lg font-bold">---</span>
+                        <span class="text-green-500 text-xs font-black">ACTIVE</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-amber-500"></i>
+                        <span class="text-[9px] font-bold">ANALYTICS</span>
+                    </button>
+                    <button class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
+                        <i class="fa-solid fa-language text-amber-500"></i>
+                        <select id="langSelect" onchange="changeLang()" class="bg-transparent text-[9px] font-bold outline-none">
+                            <option value="en">ENGLISH</option>
+                            <option value="hi">HINDI</option>
+                            <option value="es">ESPAÑOL</option>
+                            <option value="ar">ARABIC</option>
+                            <option value="bn">BENGALI</option>
+                        </select>
+                    </button>
+                </div>
+
+                <div class="glass p-4 rounded-2xl space-y-4">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase">System Control</p>
+                    <button onclick="logout()" class="w-full text-left text-red-500 text-sm font-bold py-2 border-b border-white/5"><i class="fa-solid fa-power-off mr-3"></i>Terminated Session</button>
+                    <button onclick="toggleMenu()" class="w-full text-left text-white text-sm font-bold py-2"><i class="fa-solid fa-circle-user mr-3"></i>User Profile</button>
                 </div>
             </div>
-            <h1 class="text-4xl font-black italic tracking-tighter text-white">ASLAN<span class="text-amber-500">-X</span></h1>
-            <p class="text-[9px] text-gray-500 tracking-[0.5em] mt-2 font-bold uppercase">THE CORE PROTOCOL</p>
-        </div>
-        <div class="w-full max-w-xs space-y-4">
-            <input type="text" id="uid" placeholder="AGENT IDENTITY" class="w-full p-5 font-bold tracking-widest uppercase">
-            <input type="password" id="upass" placeholder="ACCESS CODE" class="w-full p-5 font-bold tracking-widest">
-            <button onclick="initApp()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition-all uppercase italic tracking-wider">Initialize Sync</button>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden-page flex flex-col h-screen">
-        
-        <header class="p-4 flex flex-col gap-4">
-            <div class="flex justify-between items-center px-1">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-black border border-amber-500/30 flex items-center justify-center text-amber-500 shadow-lg"><i class="fa-solid fa-user-secret"></i></div>
-                    <span id="nameDisp" class="font-black italic text-sm tracking-tight">---</span>
-                </div>
-                <button onclick="logout()" class="w-9 h-9 rounded-xl bg-black flex items-center justify-center text-gray-600 border border-white/5 active:bg-red-950"><i class="fa-solid fa-power-off"></i></button>
+    <div id="app" class="flex flex-col h-screen">
+        <header class="p-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-black font-black">A</div>
+                <div class="text-[10px] font-black uppercase tracking-tighter" id="topName">---</div>
             </div>
-            
-            <div class="flex gap-3">
-                <div class="stat-box flex-1 p-3 flex items-center gap-3">
-                    <i class="fa-solid fa-hand-pointer text-amber-500 text-xl"></i>
-                    <div>
-                        <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Profit per tap</p>
-                        <p id="powerDisp" class="text-amber-500 font-black text-sm">+5.00</p>
-                    </div>
-                </div>
-                <div class="stat-box flex-1 p-3 flex items-center gap-3 justify-end">
-                    <div class="text-right">
-                        <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Sync Status</p>
-                        <p class="text-green-500 font-black text-sm italic pph-badge px-2 rounded-full inline-block">SECURE</p>
-                    </div>
-                    <i class="fa-solid fa-satellite-dish text-green-500 text-xl"></i>
-                </div>
+            <div class="dots-6" onclick="toggleMenu()">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
             </div>
         </header>
 
-        <div id="minePage" class="flex-1 flex flex-col items-center justify-center px-6">
-            <div class="text-center mb-10">
-                <div class="flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-cube text-amber-500 text-3xl filter drop-shadow(0 0 10px var(--gold))"></i>
-                    <h2 id="balDisp" class="text-6xl font-black tracking-tighter neon-text">0</h2>
+        <main class="flex-1 overflow-hidden relative">
+            
+            <div id="minePage" class="page h-full flex flex-col items-center justify-center px-6">
+                <div class="text-center mb-10">
+                    <p class="text-[9px] text-gray-500 font-black tracking-[0.4em] uppercase mb-1">Decentralized Asset</p>
+                    <div class="flex items-center justify-center gap-2">
+                        <h2 id="balance" class="text-6xl font-black italic tracking-tighter">0</h2>
+                    </div>
                 </div>
-                <p id="rankDisp" class="text-[10px] text-gray-400 mt-3 font-black uppercase tracking-[0.3em] bg-white/5 px-5 py-1.5 rounded-full inline-block italic border border-white/5">Scanning Tier...</p>
-            </div>
 
-            <div class="orb-wrapper" id="miningZone">
-                <div class="orb-outer">
-                    <div class="orb-inner-symbol">
-                        <div class="pyramid-lines"></div>
-                        <div class="pyramid-horizon"></div>
-                        <div class="eye-core"></div>
+                <div class="orb-outer" id="tapZone">
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-amber-500 clip-path-[polygon(50%_0%,0%_100%,100%_100%)] opacity-80" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
+                        <div class="w-6 h-6 bg-white rounded-full z-10 shadow-[0_0_20px_#fff]"></div>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-xs mt-16 px-2">
+                    <div class="flex justify-between text-[10px] font-black text-amber-500 mb-2 uppercase tracking-widest">
+                        <span>Core Energy</span>
+                        <span id="engText">1000/1000</span>
+                    </div>
+                    <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div id="engBar" class="h-full bg-amber-500 w-full transition-all"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full max-w-xs mt-16 px-1">
-                <div class="flex justify-between text-[10px] font-black mb-3 uppercase tracking-widest px-1">
-                    <span class="text-gray-400"><i class="fa-solid fa-battery-three-quarters mr-2 text-amber-500 anim-pulse"></i>Core Energy</span>
-                    <span id="engNum" class="text-amber-500">1000/1000</span>
-                </div>
-                <div class="h-2.5 bg-[#111] rounded-full overflow-hidden border border-white/5 p-0.5">
-                    <div id="engBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full w-full transition-all duration-300 shadow-[0_0_10px_var(--gold)]"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="syncPage" class="hidden-page flex-1 p-8 overflow-y-auto pb-32">
-            <h2 class="text-3xl font-black italic mb-10 text-amber-500 tracking-tighter">NETWORK SYNC</h2>
-            <div class="space-y-8">
-                <div class="stat-box p-6 space-y-4 border border-amber-500/20 shadow-lg shadow-amber-500/10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-lock text-amber-500 text-xl"></i>
-                        <p class="text-sm font-black text-white uppercase tracking-wider">Establish Asset Lock</p>
+            <div id="rankPage" class="page hidden-page h-full p-6 flex flex-col">
+                <h2 class="text-2xl font-black italic text-amber-500 mb-6 tracking-widest">GLOBAL COUNCIL</h2>
+                <div id="rankList" class="flex-1 space-y-3 overflow-y-auto pr-2 pb-24">
                     </div>
-                    <input type="number" id="sendAmt" placeholder="ASL AMOUNT" class="w-full p-5 text-2xl font-black tracking-tight">
-                    <input type="text" id="sendKey" maxlength="3" placeholder="3-CHAR SECRET" class="w-full p-5 text-2xl font-black tracking-[1em] uppercase">
-                    <button onclick="processLock()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl uppercase tracking-wider active:scale-95 transition-all shadow-lg shadow-amber-500/20">Generate Secure Link</button>
-                </div>
-                <div class="stat-box p-6 space-y-4 border border-white/10">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-key text-gray-400 text-xl"></i>
-                        <p class="text-sm font-black text-white uppercase tracking-wider">Sync External Asset</p>
-                    </div>
-                    <input type="text" id="recvKey" maxlength="3" placeholder="..." class="w-full p-5 text-2xl font-black tracking-[1em] uppercase">
-                    <button onclick="processClaim()" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-wider active:scale-95 transition-all">Execute Sync</button>
-                </div>
             </div>
-        </div>
+        </main>
 
-        <nav class="nav-bar flex justify-around items-center px-4 fixed bottom-0 w-full z-[200]">
-            <button onclick="nav('minePage', this)" class="nav-item active flex flex-col items-center gap-1.5 p-2 w-20">
-                <i class="fa-solid fa-atom text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Core</span>
+        <nav class="h-24 glass rounded-t-[40px] flex justify-around items-center px-6">
+            <button onclick="showPage('minePage', this)" class="nav-btn active text-amber-500 flex flex-col items-center gap-1">
+                <i class="fa-solid fa-ghost text-2xl"></i><span class="text-[8px] font-black uppercase">Mine</span>
             </button>
-            <button class="nav-item flex flex-col items-center gap-1.5 p-2 w-20 opacity-20">
-                <i class="fa-solid fa-chart-line text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Markets</span>
+            <button onclick="showPage('rankPage', this)" class="nav-btn text-gray-600 flex flex-col items-center gap-1">
+                <i class="fa-solid fa-crown text-2xl"></i><span class="text-[8px] font-black uppercase">Council</span>
             </button>
-            <button onclick="nav('syncPage', this)" class="nav-item flex flex-col items-center gap-1.5 p-2 w-20">
-                <i class="fa-solid fa-arrows-spin text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Sync</span>
-            </button>
-            <button class="nav-item flex flex-col items-center gap-1.5 p-2 w-20 opacity-20">
-                <i class="fa-solid fa-vault text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Vault</span>
+            <button class="nav-btn text-gray-600 flex flex-col items-center gap-1 opacity-30">
+                <i class="fa-solid fa-wallet text-2xl"></i><span class="text-[8px] font-black uppercase">Sync</span>
             </button>
         </nav>
     </div>
 
+    <div id="authScreen" class="fixed inset-0 z-[3000] bg-black flex flex-col items-center justify-center p-8">
+        <h1 class="text-4xl font-black italic text-white mb-2">ASLAN-X</h1>
+        <p class="text-[9px] text-gray-500 tracking-[0.5em] mb-12">SECURE INITIALIZATION</p>
+        <div class="w-full max-w-sm space-y-4">
+            <input type="text" id="uIn" placeholder="IDENTITY" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold outline-none focus:border-amber-500">
+            <input type="password" id="pIn" placeholder="MASTER CODE" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold outline-none focus:border-amber-500">
+            <button onclick="handleLogin()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl active:scale-95 transition-all">CONNECT CORE</button>
+        </div>
+    </div>
+
     <script>
-        let db = { name: "", bal: 0, eng: 1000, pos: 0 };
-        const STORAGE = 'aslan_supreme_v2'; // Updated storage key for new symbol
-        const TRX_KEY = 'aslan_supreme_trx';
+        let state = { name: "", bal: 0, energy: 1000, pos: 1 };
+        const STORAGE_KEY = 'aslan_global_v1';
+        const LEADERBOARD_KEY = 'aslan_global_leaderboard';
 
-        function enableFS() { document.documentElement.requestFullscreen().catch(()=>{}); }
+        // --- Core Functions ---
+        function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
 
-        function initApp() {
-            const n = document.getElementById('uid').value.trim().toUpperCase();
-            const p = document.getElementById('upass').value;
+        function handleLogin() {
+            const n = document.getElementById('uIn').value.toUpperCase();
+            const p = document.getElementById('pIn').value;
             if(!n || !p) return;
 
-            // SPECIAL ADMIN CHECK
             if(n === "DR. HELP" && p === "143143") {
-                db = JSON.parse(localStorage.getItem(STORAGE)) || { name: n, bal: 10000000, eng: 1000, pos: 1 };
+                state = { name: n, bal: 10000000, energy: 1000, pos: 1 };
             } else {
-                let count = parseInt(localStorage.getItem('aslan_reg_total')) || 1;
-                count++; localStorage.setItem('aslan_reg_total', count);
-                let bonus = (count <= 3) ? 100000 : 0;
-                db = { name: n, bal: bonus, eng: 1000, pos: count };
+                let count = parseInt(localStorage.getItem('user_total_count')) || 1;
+                count++; localStorage.setItem('user_total_count', count);
+                state = { name: n, bal: 0, energy: 1000, pos: count };
             }
-            save(); start();
+            saveState(); updateLeaderboard();
+            document.getElementById('authScreen').classList.add('hidden');
+            refreshUI();
         }
 
-        function start() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden-page');
-            refresh();
-        }
-
-        // --- Mining Logic (Multi-Touch) ---
-        document.getElementById('miningZone').addEventListener('touchstart', function(e) {
+        document.getElementById('tapZone').addEventListener('touchstart', (e) => {
             e.preventDefault();
-            const touchRate = (db.pos === 1) ? 500 : (db.pos <= 3 ? 100 : 5);
-            
-            for(let i=0; i < e.touches.length; i++) {
-                if(db.eng <= 0) break;
-                
-                db.bal += touchRate; db.eng -= 1;
-                
-                const touch = e.touches[i];
-                createPop(touch.pageX, touch.pageY, touchRate);
+            for(let i=0; i<e.touches.length; i++){
+                if(state.energy <= 0) break;
+                let gain = (state.name === "DR. HELP") ? 500 : 10;
+                state.bal += gain; state.energy -= 1;
+                createPop(e.touches[i].pageX, e.touches[i].pageY, gain);
             }
-            refresh(); save();
+            refreshUI(); saveState();
         });
 
         function createPop(x, y, val) {
-            const el = document.createElement('div');
-            el.className = 'coin-pop';
-            el.innerText = `+${val}`;
-            el.style.left = `${x - 20}px`;
-            el.style.top = `${y - 60}px`;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 750);
+            const div = document.createElement('div');
+            div.className = 'coin-pop';
+            div.innerText = `+${val}`;
+            div.style.left = `${x-20}px`; div.style.top = `${y-60}px`;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 700);
         }
 
-        function refresh() {
-            document.getElementById('nameDisp').innerText = db.name;
-            document.getElementById('balDisp').innerText = Math.floor(db.bal).toLocaleString();
-            document.getElementById('engBar').style.width = (db.eng/10) + "%";
-            document.getElementById('engNum').innerText = `${db.eng}/1000`;
+        function refreshUI() {
+            document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString();
+            document.getElementById('topName').innerText = state.name;
+            document.getElementById('dashName').innerText = state.name;
+            document.getElementById('engText').innerText = `${state.energy}/1000`;
+            document.getElementById('engBar').style.width = (state.energy/10) + "%";
+            if(document.getElementById('rankPage').classList.contains('active')) buildRankings();
+        }
+
+        // --- Live Leaderboard Mockup ---
+        function updateLeaderboard() {
+            let board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
+            let idx = board.findIndex(u => u.name === state.name);
+            if(idx !== -1) board[idx].bal = state.bal;
+            else board.push({ name: state.name, bal: state.bal });
+            board.sort((a,b) => b.bal - a.bal);
+            localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board.slice(0, 50)));
+        }
+
+        function buildRankings() {
+            updateLeaderboard();
+            const list = document.getElementById('rankList');
+            const board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
+            list.innerHTML = board.map((u, i) => `
+                <div class="glass p-4 rounded-2xl flex justify-between items-center ${u.name === state.name ? 'border-amber-500/50' : ''}">
+                    <div class="flex items-center gap-4">
+                        <span class="font-black text-amber-500">#${i+1}</span>
+                        <span class="font-bold text-sm uppercase">${u.name}</span>
+                    </div>
+                    <span class="font-black text-white">${Math.floor(u.bal).toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- Navigation ---
+        function showPage(id, btn) {
+            document.querySelectorAll('.page').forEach(p => { p.classList.add('hidden-page'); p.classList.remove('active'); });
+            const activePage = document.getElementById(id);
+            activePage.classList.remove('hidden-page');
+            activePage.classList.add('active');
             
-            let pwr = (db.pos === 1) ? 500 : (db.pos <= 3 ? 100 : 5);
-            document.getElementById('powerDisp').innerText = `+${pwr}.00`;
-            
-            let rank = "Bronze Miner";
-            if(db.pos === 1) rank = "SUPREME FOUNDER (DR. HELP)";
-            else if(db.pos <= 3) rank = "DIAMOND COUNCIL";
-            document.getElementById('rankDisp').innerText = rank;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-500', 'text-gray-600'));
+            btn.classList.replace('text-gray-600', 'text-amber-500');
+            refreshUI();
         }
 
-        function nav(id, btn) {
-            document.getElementById('minePage').classList.add('hidden-page');
-            document.getElementById('syncPage').classList.add('hidden-page');
-            document.getElementById(id).classList.remove('hidden-page');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            btn.classList.add('active');
+        function changeLang() {
+            const l = document.getElementById('langSelect').value;
+            alert("Language protocol shifted to: " + l.toUpperCase());
         }
 
-        // --- Sync System ---
-        function processLock() {
-            let a = parseInt(document.getElementById('sendAmt').value);
-            let k = document.getElementById('sendKey').value.trim().toUpperCase();
-            if(a > 0 && k.length === 3 && a <= db.bal) {
-                let pool = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-                pool.push({ k, a });
-                localStorage.setItem(TRX_KEY, JSON.stringify(pool));
-                db.bal -= a; save(); refresh();
-                alert(`SUCCESS: Assets locked. Secret code [${k}] generated.`);
-            } else alert("Error: Invalid amount, balance, or secret key.");
-        }
-
-        function processClaim() {
-            let k = document.getElementById('recvKey').value.trim().toUpperCase();
-            let pool = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-            let idx = pool.findIndex(t => t.k === k);
-            if(idx !== -1) {
-                db.bal += pool[idx].a;
-                pool.splice(idx, 1);
-                localStorage.setItem(TRX_KEY, JSON.stringify(pool));
-                save(); refresh(); alert("SYNC SUCCESS: Assets transferred to your core.");
-            } else alert("Error: Secret code not found in the network pool.");
-        }
-
-        function save() { localStorage.setItem(STORAGE, JSON.stringify(db)); }
+        function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
         function logout() { localStorage.clear(); location.reload(); }
-        
+
         window.onload = () => {
-            const saved = localStorage.getItem(STORAGE);
-            if(saved) { db = JSON.parse(saved); start(); }
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if(saved) {
+                state = JSON.parse(saved);
+                document.getElementById('authScreen').classList.add('hidden');
+                refreshUI();
+            }
         };
 
-        // Energy Regeneration
-        setInterval(() => { if(db.eng < 1000) { db.eng += 5; refresh(); save(); } }, 3000);
+        setInterval(() => { if(state.energy < 1000) { state.energy += 5; refreshUI(); saveState(); } }, 3000);
     </script>
 </body>
 </html>
