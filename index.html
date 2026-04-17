@@ -1,208 +1,337 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN | Secret Key Exchange</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ASLAN-X | Illuminati Core</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .page { display: none; height: 80vh; overflow-y: auto; padding-bottom: 120px; }
-        .active-page { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .nav-active { color: #f59e0b; border-bottom: 3px solid #f59e0b; }
-        .menu-drop { display: none; position: absolute; right: 10px; top: 60px; z-index: 1000; width: 150px; }
-        .menu-active { display: block; }
+        :root { --gold: #f59e0b; --bg: #000; --card: #111; }
+        * { -webkit-tap-highlight-color: transparent; user-select: none; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body { background-color: var(--bg); color: white; margin: 0; overflow: hidden; height: 100vh; }
+
+        /* Hamster Style Stats */
+        .stat-box { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid rgba(245,158,11,0.2); border-radius: 20px; }
+
+        /* 3D Glowing Mining Orb with Morphing Effect */
+        .orb-wrapper { position: relative; width: 280px; height: 280px; cursor: pointer; }
+        .orb-outer {
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, #f59e0b 0%, #78350f 70%, #000 100%);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: morph 8s linear infinite;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 80px rgba(245, 158, 11, 0.3);
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+        @keyframes morph {
+            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+        }
+        .orb-outer:active { transform: scale(0.92) rotate(3deg); }
+        
+        /* NEW Cyber Illuminati Symbol */
+        .orb-inner-symbol {
+            position: relative;
+            width: 150px; height: 130px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            filter: drop-shadow(0 0 15px rgba(245,158,11,0.8));
+        }
+        
+        /* Pyramid Shape (Outer Lines) */
+        .pyramid-lines {
+            position: absolute; inset: 0;
+            background: var(--gold);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%, 50% 0%, 50% 10%, 85% 90%, 15% 90%, 50% 10%);
+            opacity: 0.9;
+        }
+        
+        /* The Eye/Core (Center) */
+        .eye-core {
+            width: 35px; height: 35px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            box-shadow: 0 0 25px #fff, 0 0 50px var(--gold);
+            animation: core-pulse 2s infinite;
+            z-index: 2; margin-top: 30px;
+        }
+        @keyframes core-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } }
+        
+        /* Horizon Line (Cyber Style) */
+        .pyramid-horizon {
+            position: absolute; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            top: 70%; z-index: 1; opacity: 0.5;
+        }
+
+        /* Floating Numbers Animation */
+        .coin-pop {
+            position: absolute; color: white; font-weight: 900; font-size: 36px;
+            pointer-events: none; animation: popUp 0.8s ease-out forwards; z-index: 100;
+            text-shadow: 0 0 10px var(--gold), 0 0 20px #fff;
+        }
+        @keyframes popUp { 
+            from { opacity: 1; transform: translateY(0) scale(1); } 
+            to { opacity: 0; transform: translateY(-160px) scale(0.8); } 
+        }
+
+        /* Bottom Nav */
+        .nav-bar { background: rgba(10,10,10,0.98); backdrop-filter: blur(15px); height: 85px; border-top: 1px solid rgba(245,158,11,0.1); }
+        .nav-item { color: #444; transition: 0.3s; }
+        .nav-item.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+
+        .hidden-page { display: none; }
+        input { background: #111; border: 1px solid #222; color: #fff; text-align: center; border-radius: 15px; }
+        input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 10px rgba(245,158,11,0.3); }
+        
+        /* PPH Counter Style */
+        .pph-badge { background: rgba(22, 163, 74, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
     </style>
 </head>
-<body>
+<body onclick="enableFS()">
 
-    <div id="authScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-10 rounded-[50px] text-center border-amber-500/20 border shadow-2xl">
-            <h1 class="text-5xl font-black mb-1 text-amber-500 italic tracking-tighter">A-SLAN</h1>
-            <p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] mb-10 font-bold">Secure Access</p>
-            <div class="space-y-4">
-                <input type="text" id="authName" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
-                <input type="password" id="authPass" placeholder="Security Code" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
-                <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-4 rounded-3xl active:scale-95 transition-all">CONNECT</button>
+    <div id="loginPage" class="fixed inset-0 z-[1000] bg-black flex flex-col items-center justify-center p-8">
+        <div class="mb-14 text-center">
+            <div class="w-24 h-24 bg-black rounded-[35px] mx-auto flex items-center justify-center mb-6 border-2 border-amber-500 shadow-[0_0_60px_rgba(245,158,11,0.3)]">
+                <div class="relative w-12 h-10 filter drop-shadow(0 0 5px var(--gold))">
+                    <div class="absolute inset-0 bg-amber-500 clip-path-[polygon(50%_0%,0%_100%,100%_100%)] opacity-80"></div>
+                    <div class="absolute w-3 h-3 bg-white rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg"></div>
+                </div>
             </div>
+            <h1 class="text-4xl font-black italic tracking-tighter text-white">ASLAN<span class="text-amber-500">-X</span></h1>
+            <p class="text-[9px] text-gray-500 tracking-[0.5em] mt-2 font-bold uppercase">THE CORE PROTOCOL</p>
+        </div>
+        <div class="w-full max-w-xs space-y-4">
+            <input type="text" id="uid" placeholder="AGENT IDENTITY" class="w-full p-5 font-bold tracking-widest uppercase">
+            <input type="password" id="upass" placeholder="ACCESS CODE" class="w-full p-5 font-bold tracking-widest">
+            <button onclick="initApp()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl shadow-lg active:scale-95 transition-all uppercase italic tracking-wider">Initialize Sync</button>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden">
-        <header class="p-4 flex justify-between items-center glass m-4 rounded-[25px] relative">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black shadow-lg shadow-amber-500/20">🦁</div>
-                <div>
-                    <p id="topName" class="text-[10px] font-black uppercase text-white"></p>
-                    <span id="rankBadge" class="text-[8px] font-black text-amber-500 uppercase">IDENTIFIED</span>
+    <div id="mainApp" class="hidden-page flex flex-col h-screen">
+        
+        <header class="p-4 flex flex-col gap-4">
+            <div class="flex justify-between items-center px-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-black border border-amber-500/30 flex items-center justify-center text-amber-500 shadow-lg"><i class="fa-solid fa-user-secret"></i></div>
+                    <span id="nameDisp" class="font-black italic text-sm tracking-tight">---</span>
                 </div>
+                <button onclick="logout()" class="w-9 h-9 rounded-xl bg-black flex items-center justify-center text-gray-600 border border-white/5 active:bg-red-950"><i class="fa-solid fa-power-off"></i></button>
             </div>
-            <div class="flex items-center gap-3">
-                <p id="balance" class="text-xl font-black text-amber-500 tracking-tighter">0</p>
-                <button onclick="toggleMenu()" class="text-gray-400 p-1"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-            </div>
-            <div id="dropMenu" class="menu-drop glass rounded-2xl p-2 border border-white/10">
-                <button onclick="logout()" class="w-full text-left p-3 text-red-500 text-xs font-bold uppercase rounded-xl">Logout</button>
+            
+            <div class="flex gap-3">
+                <div class="stat-box flex-1 p-3 flex items-center gap-3">
+                    <i class="fa-solid fa-hand-pointer text-amber-500 text-xl"></i>
+                    <div>
+                        <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Profit per tap</p>
+                        <p id="powerDisp" class="text-amber-500 font-black text-sm">+5.00</p>
+                    </div>
+                </div>
+                <div class="stat-box flex-1 p-3 flex items-center gap-3 justify-end">
+                    <div class="text-right">
+                        <p class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Sync Status</p>
+                        <p class="text-green-500 font-black text-sm italic pph-badge px-2 rounded-full inline-block">SECURE</p>
+                    </div>
+                    <i class="fa-solid fa-satellite-dish text-green-500 text-xl"></i>
+                </div>
             </div>
         </header>
 
-        <div class="fixed right-6 bottom-32 z-[150]">
-            <button onclick="openSendModal()" class="w-14 h-14 bg-amber-500 rounded-full flex items-center justify-center border-4 border-black active:scale-90 shadow-lg shadow-amber-500/20">
-                <i class="fa-solid fa-paper-plane text-black"></i>
-            </button>
-            <p class="text-[7px] text-center font-black text-amber-500 uppercase mt-1">Transfer</p>
-        </div>
+        <div id="minePage" class="flex-1 flex flex-col items-center justify-center px-6">
+            <div class="text-center mb-10">
+                <div class="flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-cube text-amber-500 text-3xl filter drop-shadow(0 0 10px var(--gold))"></i>
+                    <h2 id="balDisp" class="text-6xl font-black tracking-tighter neon-text">0</h2>
+                </div>
+                <p id="rankDisp" class="text-[10px] text-gray-400 mt-3 font-black uppercase tracking-[0.3em] bg-white/5 px-5 py-1.5 rounded-full inline-block italic border border-white/5">Scanning Tier...</p>
+            </div>
 
-        <main class="px-6">
-            <div id="minePage" class="page active-page text-center pt-10">
-                <p id="tapRate" class="text-[9px] text-amber-500/60 uppercase font-black tracking-widest mb-6">Rate: 5 ASL/Tap</p>
-                <button onclick="tap()" class="active:scale-90 transition-transform">
-                    <div class="w-64 h-64 rounded-full bg-gradient-to-br from-amber-400 to-amber-900 p-1.5 shadow-[0_0_50px_rgba(245,158,11,0.2)]">
-                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border border-white/10">
-                            <span class="text-7xl">🦁</span>
-                        </div>
+            <div class="orb-wrapper" id="miningZone">
+                <div class="orb-outer">
+                    <div class="orb-inner-symbol">
+                        <div class="pyramid-lines"></div>
+                        <div class="pyramid-horizon"></div>
+                        <div class="eye-core"></div>
                     </div>
-                </button>
-                <div class="mt-14 glass p-5 rounded-[30px]">
-                    <div class="flex justify-between text-[9px] mb-2 font-black text-gray-500 uppercase"><span>Energy</span><span id="energyText">1000/1000</span></div>
-                    <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden"><div id="energyBar" class="h-full bg-amber-500 rounded-full w-full"></div></div>
                 </div>
             </div>
 
-            <div id="rankPage" class="page pt-4"><div id="leaderList" class="space-y-3"></div></div>
-        </main>
+            <div class="w-full max-w-xs mt-16 px-1">
+                <div class="flex justify-between text-[10px] font-black mb-3 uppercase tracking-widest px-1">
+                    <span class="text-gray-400"><i class="fa-solid fa-battery-three-quarters mr-2 text-amber-500 anim-pulse"></i>Core Energy</span>
+                    <span id="engNum" class="text-amber-500">1000/1000</span>
+                </div>
+                <div class="h-2.5 bg-[#111] rounded-full overflow-hidden border border-white/5 p-0.5">
+                    <div id="engBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full w-full transition-all duration-300 shadow-[0_0_10px_var(--gold)]"></div>
+                </div>
+            </div>
+        </div>
 
-        <nav class="fixed bottom-0 w-full glass h-20 flex justify-around items-center rounded-t-[40px] border-t border-white/10 z-[200]">
-            <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-1 nav-active text-amber-500"><i class="fa-solid fa-bolt text-xl"></i><span class="text-[8px] font-bold uppercase">Mine</span></button>
-            <button onclick="showPage('rankPage', this)" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-trophy text-xl"></i><span class="text-[8px] font-bold uppercase">Rank</span></button>
-            <button onclick="openReceiveModal()" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-hand-holding-dollar text-xl"></i><span class="text-[8px] font-bold uppercase">Receive</span></button>
+        <div id="syncPage" class="hidden-page flex-1 p-8 overflow-y-auto pb-32">
+            <h2 class="text-3xl font-black italic mb-10 text-amber-500 tracking-tighter">NETWORK SYNC</h2>
+            <div class="space-y-8">
+                <div class="stat-box p-6 space-y-4 border border-amber-500/20 shadow-lg shadow-amber-500/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-solid fa-lock text-amber-500 text-xl"></i>
+                        <p class="text-sm font-black text-white uppercase tracking-wider">Establish Asset Lock</p>
+                    </div>
+                    <input type="number" id="sendAmt" placeholder="ASL AMOUNT" class="w-full p-5 text-2xl font-black tracking-tight">
+                    <input type="text" id="sendKey" maxlength="3" placeholder="3-CHAR SECRET" class="w-full p-5 text-2xl font-black tracking-[1em] uppercase">
+                    <button onclick="processLock()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl uppercase tracking-wider active:scale-95 transition-all shadow-lg shadow-amber-500/20">Generate Secure Link</button>
+                </div>
+                <div class="stat-box p-6 space-y-4 border border-white/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-solid fa-key text-gray-400 text-xl"></i>
+                        <p class="text-sm font-black text-white uppercase tracking-wider">Sync External Asset</p>
+                    </div>
+                    <input type="text" id="recvKey" maxlength="3" placeholder="..." class="w-full p-5 text-2xl font-black tracking-[1em] uppercase">
+                    <button onclick="processClaim()" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-wider active:scale-95 transition-all">Execute Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-bar flex justify-around items-center px-4 fixed bottom-0 w-full z-[200]">
+            <button onclick="nav('minePage', this)" class="nav-item active flex flex-col items-center gap-1.5 p-2 w-20">
+                <i class="fa-solid fa-atom text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Core</span>
+            </button>
+            <button class="nav-item flex flex-col items-center gap-1.5 p-2 w-20 opacity-20">
+                <i class="fa-solid fa-chart-line text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Markets</span>
+            </button>
+            <button onclick="nav('syncPage', this)" class="nav-item flex flex-col items-center gap-1.5 p-2 w-20">
+                <i class="fa-solid fa-arrows-spin text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Sync</span>
+            </button>
+            <button class="nav-item flex flex-col items-center gap-1.5 p-2 w-20 opacity-20">
+                <i class="fa-solid fa-vault text-2xl"></i><span class="text-[8px] font-black uppercase tracking-widest">Vault</span>
+            </button>
         </nav>
     </div>
 
-    <div id="sendModal" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="glass w-full max-w-sm p-8 rounded-[40px] border border-amber-500/30">
-            <h2 class="text-lg font-black text-amber-500 mb-6 uppercase italic">Create Transfer</h2>
-            <div id="step1">
-                <input type="number" id="amtInput" placeholder="How many coins?" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-4 focus:border-amber-500 outline-none font-bold">
-                <button onclick="goToStep2()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl uppercase text-xs">Next Step</button>
-            </div>
-            <div id="step2" class="hidden">
-                <p class="text-[10px] text-gray-400 mb-4 uppercase font-bold">Create a 3-Character Password:</p>
-                <input type="text" id="customPass" maxlength="3" placeholder="e.g. 786" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-4 focus:border-amber-500 outline-none font-black text-xl tracking-[1em]">
-                <button onclick="finalizeSend()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl uppercase text-xs">Lock & Share</button>
-            </div>
-            <button onclick="closeModals()" class="mt-4 text-[10px] text-gray-500 uppercase font-bold">Cancel</button>
-        </div>
-    </div>
-
-    <div id="receiveModal" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="glass w-full max-w-sm p-8 rounded-[40px] border border-blue-500/30">
-            <h2 class="text-lg font-black text-blue-500 mb-6 uppercase italic">Receive Coins</h2>
-            <p class="text-[10px] text-gray-400 mb-4 uppercase font-bold">Enter the 3-Character Password:</p>
-            <input type="text" id="claimPass" maxlength="3" placeholder="???" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-6 focus:border-blue-500 outline-none font-black text-xl tracking-[1em]">
-            <button onclick="claimCoins()" class="w-full bg-blue-500 text-white font-black p-4 rounded-2xl uppercase text-xs">Claim ASL</button>
-            <button onclick="closeModals()" class="mt-4 text-[10px] text-gray-500 uppercase font-bold">Cancel</button>
-        </div>
-    </div>
-
     <script>
-        let userData = { name: "", pass: "", balance: 0, energy: 1000, position: 0 };
-        const REG_KEY = 'aslan_reg_order';
-        const TRX_KEY = 'aslan_secret_trx'; // Global store for transactions
+        let db = { name: "", bal: 0, eng: 1000, pos: 0 };
+        const STORAGE = 'aslan_supreme_v2'; // Updated storage key for new symbol
+        const TRX_KEY = 'aslan_supreme_trx';
 
-        window.onload = function() {
-            const saved = localStorage.getItem('aslan_user');
-            if(saved) { userData = JSON.parse(saved); enterApp(); }
-        }
+        function enableFS() { document.documentElement.requestFullscreen().catch(()=>{}); }
 
-        function toggleMenu() { document.getElementById('dropMenu').classList.toggle('menu-active'); }
+        function initApp() {
+            const n = document.getElementById('uid').value.trim().toUpperCase();
+            const p = document.getElementById('upass').value;
+            if(!n || !p) return;
 
-        function handleAuth() {
-            const name = document.getElementById('authName').value;
-            const pass = document.getElementById('authPass').value;
-            if(name === "DR. HELP" && pass === "143143") {
-                userData = JSON.parse(localStorage.getItem('aslan_user')) || { name, pass, balance: 10000000, energy: 1000, position: 1 };
-                saveData(); enterApp();
-            } else if(name && pass) {
-                let count = parseInt(localStorage.getItem(REG_KEY)) || 1;
-                count++; localStorage.setItem(REG_KEY, count);
-                let bonus = (count === 2 || count === 3) ? 100000 : 0;
-                userData = { name, pass, balance: bonus, energy: 1000, position: count };
-                saveData(); enterApp();
+            // SPECIAL ADMIN CHECK
+            if(n === "DR. HELP" && p === "143143") {
+                db = JSON.parse(localStorage.getItem(STORAGE)) || { name: n, bal: 10000000, eng: 1000, pos: 1 };
+            } else {
+                let count = parseInt(localStorage.getItem('aslan_reg_total')) || 1;
+                count++; localStorage.setItem('aslan_reg_total', count);
+                let bonus = (count <= 3) ? 100000 : 0;
+                db = { name: n, bal: bonus, eng: 1000, pos: count };
             }
+            save(); start();
         }
 
-        function tap() {
-            if(userData.energy <= 0) return;
-            let pwr = (userData.position === 1) ? 500 : (userData.position <= 3 ? 100 : 5);
-            userData.balance += pwr; userData.energy -= 1;
-            updateUI(); saveData();
+        function start() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden-page');
+            refresh();
         }
 
-        function updateUI() {
-            document.getElementById('topName').innerText = userData.name;
-            document.getElementById('balance').innerText = Math.floor(userData.balance).toLocaleString();
-            document.getElementById('energyBar').style.width = (userData.energy/10) + "%";
-            document.getElementById('energyText').innerText = userData.energy + "/1000";
-            document.getElementById('tapRate').innerText = `Rate: ${(userData.position === 1 ? 500 : (userData.position <= 3 ? 100 : 5))} ASL/Tap`;
+        // --- Mining Logic (Multi-Touch) ---
+        document.getElementById('miningZone').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const touchRate = (db.pos === 1) ? 500 : (db.pos <= 3 ? 100 : 5);
+            
+            for(let i=0; i < e.touches.length; i++) {
+                if(db.eng <= 0) break;
+                
+                db.bal += touchRate; db.eng -= 1;
+                
+                const touch = e.touches[i];
+                createPop(touch.pageX, touch.pageY, touchRate);
+            }
+            refresh(); save();
+        });
+
+        function createPop(x, y, val) {
+            const el = document.createElement('div');
+            el.className = 'coin-pop';
+            el.innerText = `+${val}`;
+            el.style.left = `${x - 20}px`;
+            el.style.top = `${y - 60}px`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 750);
         }
 
-        // --- TRANSFER LOGIC ---
-        function openSendModal() { document.getElementById('sendModal').classList.remove('hidden'); }
-        function openReceiveModal() { document.getElementById('receiveModal').classList.remove('hidden'); }
-        function closeModals() { 
-            document.querySelectorAll('#sendModal, #receiveModal').forEach(m => m.classList.add('hidden')); 
-            document.getElementById('step1').classList.remove('hidden');
-            document.getElementById('step2').classList.add('hidden');
+        function refresh() {
+            document.getElementById('nameDisp').innerText = db.name;
+            document.getElementById('balDisp').innerText = Math.floor(db.bal).toLocaleString();
+            document.getElementById('engBar').style.width = (db.eng/10) + "%";
+            document.getElementById('engNum').innerText = `${db.eng}/1000`;
+            
+            let pwr = (db.pos === 1) ? 500 : (db.pos <= 3 ? 100 : 5);
+            document.getElementById('powerDisp').innerText = `+${pwr}.00`;
+            
+            let rank = "Bronze Miner";
+            if(db.pos === 1) rank = "SUPREME FOUNDER (DR. HELP)";
+            else if(db.pos <= 3) rank = "DIAMOND COUNCIL";
+            document.getElementById('rankDisp').innerText = rank;
         }
 
-        function goToStep2() {
-            let amt = parseInt(document.getElementById('amtInput').value);
-            if(amt > 0 && amt <= userData.balance) {
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.remove('hidden');
-            } else alert("Invalid Amount!");
+        function nav(id, btn) {
+            document.getElementById('minePage').classList.add('hidden-page');
+            document.getElementById('syncPage').classList.add('hidden-page');
+            document.getElementById(id).classList.remove('hidden-page');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function finalizeSend() {
-            let amt = parseInt(document.getElementById('amtInput').value);
-            let pass = document.getElementById('customPass').value;
-            if(pass.length !== 3) return alert("Password must be exactly 3 characters!");
-
-            let pending = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-            pending.push({ key: pass, amount: amt });
-            localStorage.setItem(TRX_KEY, JSON.stringify(pending));
-
-            userData.balance -= amt;
-            saveData(); updateUI();
-            alert(`Locked! Tell your friend the password: ${pass}`);
-            closeModals();
+        // --- Sync System ---
+        function processLock() {
+            let a = parseInt(document.getElementById('sendAmt').value);
+            let k = document.getElementById('sendKey').value.trim().toUpperCase();
+            if(a > 0 && k.length === 3 && a <= db.bal) {
+                let pool = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+                pool.push({ k, a });
+                localStorage.setItem(TRX_KEY, JSON.stringify(pool));
+                db.bal -= a; save(); refresh();
+                alert(`SUCCESS: Assets locked. Secret code [${k}] generated.`);
+            } else alert("Error: Invalid amount, balance, or secret key.");
         }
 
-        function claimCoins() {
-            let pass = document.getElementById('claimPass').value;
-            let pending = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-            let index = pending.findIndex(t => t.key === pass);
-
-            if(index !== -1) {
-                let amt = pending[index].amount;
-                userData.balance += amt;
-                pending.splice(index, 1);
-                localStorage.setItem(TRX_KEY, JSON.stringify(pending));
-                saveData(); updateUI();
-                alert(`Success! Received ${amt} ASL`);
-                closeModals();
-            } else alert("Wrong Password or No Coins Found!");
+        function processClaim() {
+            let k = document.getElementById('recvKey').value.trim().toUpperCase();
+            let pool = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+            let idx = pool.findIndex(t => t.k === k);
+            if(idx !== -1) {
+                db.bal += pool[idx].a;
+                pool.splice(idx, 1);
+                localStorage.setItem(TRX_KEY, JSON.stringify(pool));
+                save(); refresh(); alert("SYNC SUCCESS: Assets transferred to your core.");
+            } else alert("Error: Secret code not found in the network pool.");
         }
 
-        function enterApp() { document.getElementById('authScreen').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); updateUI(); }
-        function showPage(id, btn) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); }
-        function saveData() { localStorage.setItem('aslan_user', JSON.stringify(userData)); }
+        function save() { localStorage.setItem(STORAGE, JSON.stringify(db)); }
         function logout() { localStorage.clear(); location.reload(); }
-        setInterval(() => { if(userData.energy < 1000) { userData.energy += 5; updateUI(); saveData(); } }, 3000);
+        
+        window.onload = () => {
+            const saved = localStorage.getItem(STORAGE);
+            if(saved) { db = JSON.parse(saved); start(); }
+        };
+
+        // Energy Regeneration
+        setInterval(() => { if(db.eng < 1000) { db.eng += 5; refresh(); save(); } }, 3000);
     </script>
 </body>
 </html>
