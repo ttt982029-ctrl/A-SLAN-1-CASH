@@ -3,272 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ASLAN-X | Global Protocol</title>
+    <title>ASLAN-X | INFINITY</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --gold: #f59e0b; --bg: #000; }
-        * { -webkit-tap-highlight-color: transparent; user-select: none; box-sizing: border-box; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+        :root { --gold: #fbbf24; --bg: #000; }
+        body { background: var(--bg); color: white; font-family: 'Outfit', sans-serif; margin: 0; }
+        * { -webkit-tap-highlight-color: transparent; user-select: none; transition: all 0.3s ease; }
 
-        /* The 6-Dot Menu Button */
-        .dots-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 24px; cursor: pointer; }
-        .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 5px var(--gold); }
+        /* Smooth Scrolling */
+        .app-container { height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
 
-        /* Professional Dashboard & Menu Overlay */
-        #sideMenu { transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        #sideMenu.active { transform: translateX(0); }
+        /* 6-Dot Menu */
+        .dots-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; cursor: pointer; }
+        .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 8px var(--gold); }
 
-        /* Morphing Illuminati Orb */
-        .orb-outer {
-            width: 280px; height: 280px;
-            background: radial-gradient(circle, #f59e0b 0%, #78350f 70%, #000 100%);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            animation: morph 8s linear infinite;
+        /* Mining Orb */
+        .orb-main {
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, #fbbf24 0%, #78350f 70%, #000 100%);
+            border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+            animation: morph 6s infinite alternate;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 60px rgba(245, 158, 11, 0.2);
-            transition: transform 0.1s;
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.2);
         }
-        @keyframes morph {
-            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
-        }
-        .orb-outer:active { transform: scale(0.92); }
+        @keyframes morph { 0% { border-radius: 38% 62% 63% 37%; } 100% { border-radius: 60% 40% 30% 70%; } }
+        .orb-main:active { transform: scale(0.9); }
 
-        /* Coin Pop Animation */
-        .coin-pop { position: absolute; color: white; font-weight: 900; font-size: 32px; pointer-events: none; 
-                    animation: popUp 0.7s ease-out forwards; text-shadow: 0 0 10px var(--gold); }
-        @keyframes popUp { to { opacity: 0; transform: translateY(-120px); } }
+        /* Trading Table Glow */
+        .trade-row { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .up { color: #2ecc71; } .down { color: #e74c3c; }
 
-        .hidden-page { display: none; }
-        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
+        .hidden { display: none; }
+        
+        /* Floating Text */
+        .pop { position: absolute; color: white; font-weight: 900; animation: pUp 0.6s forwards; pointer-events: none; }
+        @keyframes pUp { to { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
-    <div id="sideMenu" class="fixed inset-0 z-[2000] bg-black/95 flex justify-end">
-        <div class="w-[85%] h-full bg-[#0a0a0a] border-l border-white/10 p-6 flex flex-col">
-            <div class="flex justify-between items-center mb-10">
-                <h3 class="text-amber-500 font-black italic tracking-widest">DASHBOARD</h3>
-                <button onclick="toggleMenu()" class="text-2xl text-white">&times;</button>
-            </div>
-            
-            <div class="space-y-6 flex-1 overflow-y-auto">
-                <div class="glass p-4 rounded-2xl">
-                    <p class="text-[10px] text-gray-500 font-bold mb-2 uppercase">Core Status</p>
-                    <div class="flex justify-between items-center">
-                        <span id="dashName" class="text-lg font-bold">---</span>
-                        <span class="text-green-500 text-xs font-black">ACTIVE</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <button class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <i class="fa-solid fa-chart-line text-amber-500"></i>
-                        <span class="text-[9px] font-bold">ANALYTICS</span>
-                    </button>
-                    <button class="glass p-4 rounded-2xl flex flex-col items-center gap-2">
-                        <i class="fa-solid fa-language text-amber-500"></i>
-                        <select id="langSelect" onchange="changeLang()" class="bg-transparent text-[9px] font-bold outline-none">
-                            <option value="en">ENGLISH</option>
-                            <option value="hi">HINDI</option>
-                            <option value="es">ESPAÑOL</option>
-                            <option value="ar">ARABIC</option>
-                            <option value="bn">BENGALI</option>
-                        </select>
-                    </button>
-                </div>
-
-                <div class="glass p-4 rounded-2xl space-y-4">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase">System Control</p>
-                    <button onclick="logout()" class="w-full text-left text-red-500 text-sm font-bold py-2 border-b border-white/5"><i class="fa-solid fa-power-off mr-3"></i>Terminated Session</button>
-                    <button onclick="toggleMenu()" class="w-full text-left text-white text-sm font-bold py-2"><i class="fa-solid fa-circle-user mr-3"></i>User Profile</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="app" class="flex flex-col h-screen">
-        <header class="p-6 flex justify-between items-center">
+    <div class="app-container" id="scrollBody">
+        
+        <header class="p-6 flex justify-between items-center sticky top-0 bg-black/50 backdrop-blur-md z-[100]">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-black font-black">A</div>
-                <div class="text-[10px] font-black uppercase tracking-tighter" id="topName">---</div>
+                <div class="flex flex-col">
+                    <span id="uNameTop" class="text-xs font-black italic">---</span>
+                    <span id="levelBadge" class="text-[8px] bg-amber-500/10 text-amber-500 px-2 rounded-full border border-amber-500/20 w-fit">LVL 1</span>
+                </div>
             </div>
-            <div class="dots-6" onclick="toggleMenu()">
+            <div class="dots-6" onclick="toggleDashboard()">
                 <div class="dot"></div><div class="dot"></div><div class="dot"></div>
                 <div class="dot"></div><div class="dot"></div><div class="dot"></div>
             </div>
         </header>
 
-        <main class="flex-1 overflow-hidden relative">
+        <section class="min-h-screen flex flex-col items-center justify-center p-6 relative">
+            <div class="text-center mb-10">
+                <p id="txt-asset" class="text-[9px] text-gray-500 font-bold tracking-[0.4em] uppercase mb-2">Decentralized Core</p>
+                <h2 id="balance" class="text-6xl font-black tracking-tighter">0</h2>
+            </div>
+
+            <div class="orb-main" id="tapZone">
+                <div class="text-6xl filter drop-shadow(0 0 10px #fff)">👁️‍🗨️</div>
+            </div>
+
+            <div class="w-full max-w-xs mt-12 px-2">
+                <div class="flex justify-between text-[10px] font-bold text-amber-500 mb-2 uppercase">
+                    <span id="txt-energy">Energy Reserves</span>
+                    <span id="engVal">1000/1000</span>
+                </div>
+                <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div id="engBar" class="h-full bg-amber-500 w-full"></div>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-down absolute bottom-10 animate-bounce text-gray-700"></i>
+        </section>
+
+        <section class="p-6 pb-32">
+            <h3 id="txt-market" class="text-xl font-black italic text-amber-500 mb-6">LIVE MARKET FLOW</h3>
             
-            <div id="minePage" class="page h-full flex flex-col items-center justify-center px-6">
-                <div class="text-center mb-10">
-                    <p class="text-[9px] text-gray-500 font-black tracking-[0.4em] uppercase mb-1">Decentralized Asset</p>
-                    <div class="flex items-center justify-center gap-2">
-                        <h2 id="balance" class="text-6xl font-black italic tracking-tighter">0</h2>
-                    </div>
+            <div class="glass rounded-3xl p-4 overflow-hidden mb-8">
+                <div class="flex justify-between text-[9px] text-gray-500 font-bold mb-4 px-2">
+                    <span>ASSET PAIR</span>
+                    <span>PRICE</span>
+                    <span>CHANGE</span>
                 </div>
-
-                <div class="orb-outer" id="tapZone">
-                    <div class="relative w-32 h-32 flex items-center justify-center">
-                        <div class="absolute inset-0 bg-amber-500 clip-path-[polygon(50%_0%,0%_100%,100%_100%)] opacity-80" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></div>
-                        <div class="w-6 h-6 bg-white rounded-full z-10 shadow-[0_0_20px_#fff]"></div>
+                <div id="tradeList" class="space-y-4">
                     </div>
-                </div>
-
-                <div class="w-full max-w-xs mt-16 px-2">
-                    <div class="flex justify-between text-[10px] font-black text-amber-500 mb-2 uppercase tracking-widest">
-                        <span>Core Energy</span>
-                        <span id="engText">1000/1000</span>
-                    </div>
-                    <div class="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                        <div id="engBar" class="h-full bg-amber-500 w-full transition-all"></div>
-                    </div>
-                </div>
             </div>
 
-            <div id="rankPage" class="page hidden-page h-full p-6 flex flex-col">
-                <h2 class="text-2xl font-black italic text-amber-500 mb-6 tracking-widest">GLOBAL COUNCIL</h2>
-                <div id="rankList" class="flex-1 space-y-3 overflow-y-auto pr-2 pb-24">
-                    </div>
+            <div class="glass rounded-3xl p-8 flex flex-col items-center text-center gap-4">
+                <div class="w-40 h-40 bg-white p-2 rounded-2xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ASLAN-X-USER" alt="QR" class="w-full h-full">
+                </div>
+                <p class="text-xs text-gray-400 font-medium">Your Network Identity Node</p>
+                <div class="bg-white/5 p-3 rounded-xl w-full text-[10px] font-mono border border-white/5 truncate">
+                    aslan-protocol.network/ref/node-7781
+                </div>
             </div>
-        </main>
+        </section>
 
-        <nav class="h-24 glass rounded-t-[40px] flex justify-around items-center px-6">
-            <button onclick="showPage('minePage', this)" class="nav-btn active text-amber-500 flex flex-col items-center gap-1">
-                <i class="fa-solid fa-ghost text-2xl"></i><span class="text-[8px] font-black uppercase">Mine</span>
-            </button>
-            <button onclick="showPage('rankPage', this)" class="nav-btn text-gray-600 flex flex-col items-center gap-1">
-                <i class="fa-solid fa-crown text-2xl"></i><span class="text-[8px] font-black uppercase">Council</span>
-            </button>
-            <button class="nav-btn text-gray-600 flex flex-col items-center gap-1 opacity-30">
-                <i class="fa-solid fa-wallet text-2xl"></i><span class="text-[8px] font-black uppercase">Sync</span>
-            </button>
-        </nav>
     </div>
 
-    <div id="authScreen" class="fixed inset-0 z-[3000] bg-black flex flex-col items-center justify-center p-8">
-        <h1 class="text-4xl font-black italic text-white mb-2">ASLAN-X</h1>
-        <p class="text-[9px] text-gray-500 tracking-[0.5em] mb-12">SECURE INITIALIZATION</p>
-        <div class="w-full max-w-sm space-y-4">
-            <input type="text" id="uIn" placeholder="IDENTITY" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold outline-none focus:border-amber-500">
-            <input type="password" id="pIn" placeholder="MASTER CODE" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold outline-none focus:border-amber-500">
-            <button onclick="handleLogin()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl active:scale-95 transition-all">CONNECT CORE</button>
+    <div id="dash" class="fixed inset-0 z-[2000] bg-black/95 translate-x-full transition-transform duration-500 p-8 flex flex-col">
+        <div class="flex justify-between items-center mb-10">
+            <h3 class="text-2xl font-black italic text-amber-500">PRO DASHBOARD</h3>
+            <button onclick="toggleDashboard()" class="text-3xl">&times;</button>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="glass p-6 rounded-2xl border-l-4 border-amber-500">
+                <p id="txt-lang-label" class="text-[10px] text-gray-500 font-black mb-4 uppercase">System Language</p>
+                <select id="langSel" onchange="updateLang()" class="w-full bg-[#111] p-4 rounded-xl border border-white/10 outline-none font-bold">
+                    <option value="en">ENGLISH (US)</option>
+                    <option value="hi">HINDI (भारत)</option>
+                    <option value="bn">BENGALI (বাংলা)</option>
+                    <option value="es">ESPAÑOL</option>
+                </select>
+            </div>
+
+            <div class="glass p-6 rounded-2xl">
+                <p class="text-[10px] text-gray-500 font-black mb-4 uppercase">Profile Status</p>
+                <div class="flex items-center gap-4">
+                    <div id="proIcon" class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-black font-black text-xl">D</div>
+                    <div>
+                        <p id="dashUser" class="font-black text-lg italic">---</p>
+                        <p id="dashLevel" class="text-[10px] text-amber-500">Level 1 Miner</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="logout()" class="w-full bg-red-500/10 text-red-500 font-black py-4 rounded-xl border border-red-500/20 mt-auto">TERMINATE SESSION</button>
+        </div>
+    </div>
+
+    <div id="auth" class="fixed inset-0 z-[3000] bg-black flex flex-col items-center justify-center p-8">
+        <div class="w-20 h-20 bg-amber-500 rounded-2xl flex items-center justify-center text-4xl mb-8 shadow-2xl">🦁</div>
+        <div class="w-full max-w-xs space-y-4">
+            <input type="text" id="uID" placeholder="IDENTITY" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold">
+            <input type="password" id="uPass" placeholder="ACCESS CODE" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold">
+            <button onclick="login()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl">INITIALIZE CORE</button>
         </div>
     </div>
 
     <script>
-        let state = { name: "", bal: 0, energy: 1000, pos: 1 };
-        const STORAGE_KEY = 'aslan_global_v1';
-        const LEADERBOARD_KEY = 'aslan_global_leaderboard';
+        let db = { name: "", bal: 0, eng: 1000, lvl: 1, lang: "en" };
+        const KEY = 'aslan_infinity_v1';
 
-        // --- Core Functions ---
-        function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+        const langs = {
+            en: { asset: "Decentralized Asset", energy: "Energy Reserves", market: "Live Market Flow", lang: "System Language" },
+            hi: { asset: "विकेंद्रीकृत संपत्ति", energy: "ऊर्जा भंडार", market: "लाइव मार्केट फ्लो", lang: "सिस्टम भाषा" },
+            bn: { asset: "বিকেন্দ্রীভূত সম্পদ", energy: "এনার্জি রিজার্ভ", market: "লাইভ মার্কেট ফ্লো", lang: "সিস্টেম ভাষা" },
+            es: { asset: "Activo Descentralizado", energy: "Reservas de Energía", market: "Flujo de Mercado", lang: "Idioma del Sistema" }
+        };
 
-        function handleLogin() {
-            const n = document.getElementById('uIn').value.toUpperCase();
-            const p = document.getElementById('pIn').value;
+        function toggleDashboard() { document.getElementById('dash').classList.toggle('translate-x-full'); }
+
+        function login() {
+            const n = document.getElementById('uID').value.toUpperCase();
+            const p = document.getElementById('uPass').value;
             if(!n || !p) return;
 
             if(n === "DR. HELP" && p === "143143") {
-                state = { name: n, bal: 10000000, energy: 1000, pos: 1 };
+                db = { name: n, bal: 10000000, eng: 1000, lvl: 100, lang: "en" };
             } else {
-                let count = parseInt(localStorage.getItem('user_total_count')) || 1;
-                count++; localStorage.setItem('user_total_count', count);
-                state = { name: n, bal: 0, energy: 1000, pos: count };
+                db = { name: n, bal: 0, eng: 1000, lvl: 1, lang: "en" };
             }
-            saveState(); updateLeaderboard();
-            document.getElementById('authScreen').classList.add('hidden');
-            refreshUI();
+            document.getElementById('auth').classList.add('hidden');
+            save(); refresh();
         }
 
+        // --- Mining & Level System ---
         document.getElementById('tapZone').addEventListener('touchstart', (e) => {
             e.preventDefault();
-            for(let i=0; i<e.touches.length; i++){
-                if(state.energy <= 0) break;
-                let gain = (state.name === "DR. HELP") ? 500 : 10;
-                state.bal += gain; state.energy -= 1;
-                createPop(e.touches[i].pageX, e.touches[i].pageY, gain);
+            const tapPower = (db.name === "DR. HELP" || db.lvl >= 97) ? 500 : 10;
+            
+            for(let i=0; i<e.touches.length; i++) {
+                if(db.eng <= 0) break;
+                db.bal += tapPower; db.eng -= 1;
+                createPop(e.touches[i].pageX, e.touches[i].pageY, tapPower);
             }
-            refreshUI(); saveState();
+            updateLevel(); refresh(); save();
         });
 
-        function createPop(x, y, val) {
-            const div = document.createElement('div');
-            div.className = 'coin-pop';
-            div.innerText = `+${val}`;
-            div.style.left = `${x-20}px`; div.style.top = `${y-60}px`;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 700);
+        function updateLevel() {
+            // Level 1 to 100 logic based on balance
+            let newLvl = Math.min(100, Math.floor(db.bal / 5000) + 1);
+            if(db.name === "DR. HELP") newLvl = 100;
+            db.lvl = newLvl;
         }
 
-        function refreshUI() {
-            document.getElementById('balance').innerText = Math.floor(state.bal).toLocaleString();
-            document.getElementById('topName').innerText = state.name;
-            document.getElementById('dashName').innerText = state.name;
-            document.getElementById('engText').innerText = `${state.energy}/1000`;
-            document.getElementById('engBar').style.width = (state.energy/10) + "%";
-            if(document.getElementById('rankPage').classList.contains('active')) buildRankings();
+        function createPop(x, y, v) {
+            const d = document.createElement('div');
+            d.className = 'pop text-2xl font-black';
+            d.innerText = `+${v}`;
+            d.style.left = `${x-20}px`; d.style.top = `${y-60}px`;
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 600);
         }
 
-        // --- Live Leaderboard Mockup ---
-        function updateLeaderboard() {
-            let board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
-            let idx = board.findIndex(u => u.name === state.name);
-            if(idx !== -1) board[idx].bal = state.bal;
-            else board.push({ name: state.name, bal: state.bal });
-            board.sort((a,b) => b.bal - a.bal);
-            localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board.slice(0, 50)));
+        function updateLang() {
+            db.lang = document.getElementById('langSel').value;
+            refresh(); save();
         }
 
-        function buildRankings() {
-            updateLeaderboard();
-            const list = document.getElementById('rankList');
-            const board = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
-            list.innerHTML = board.map((u, i) => `
-                <div class="glass p-4 rounded-2xl flex justify-between items-center ${u.name === state.name ? 'border-amber-500/50' : ''}">
-                    <div class="flex items-center gap-4">
-                        <span class="font-black text-amber-500">#${i+1}</span>
-                        <span class="font-bold text-sm uppercase">${u.name}</span>
-                    </div>
-                    <span class="font-black text-white">${Math.floor(u.bal).toLocaleString()}</span>
-                </div>
-            `).join('');
-        }
-
-        // --- Navigation ---
-        function showPage(id, btn) {
-            document.querySelectorAll('.page').forEach(p => { p.classList.add('hidden-page'); p.classList.remove('active'); });
-            const activePage = document.getElementById(id);
-            activePage.classList.remove('hidden-page');
-            activePage.classList.add('active');
+        function refresh() {
+            document.getElementById('balance').innerText = Math.floor(db.bal).toLocaleString();
+            document.getElementById('uNameTop').innerText = db.name;
+            document.getElementById('dashUser').innerText = db.name;
+            document.getElementById('levelBadge').innerText = `LVL ${db.lvl}`;
+            document.getElementById('dashLevel').innerText = `Level ${db.lvl} Miner`;
+            document.getElementById('engVal').innerText = `${db.eng}/1000`;
+            document.getElementById('engBar').style.width = (db.eng/10) + "%";
             
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-500', 'text-gray-600'));
-            btn.classList.replace('text-gray-600', 'text-amber-500');
-            refreshUI();
+            // Text Translation
+            const t = langs[db.lang];
+            document.getElementById('txt-asset').innerText = t.asset;
+            document.getElementById('txt-energy').innerText = t.energy;
+            document.getElementById('txt-market').innerText = t.market;
+            document.getElementById('txt-lang-label').innerText = t.lang;
         }
 
-        function changeLang() {
-            const l = document.getElementById('langSelect').value;
-            alert("Language protocol shifted to: " + l.toUpperCase());
+        // --- Live Trading Simulation ---
+        function genTrades() {
+            const pairs = ["BTC/ASL", "ETH/ASL", "BNB/ASL", "SOL/ASL", "XRP/ASL"];
+            const list = document.getElementById('tradeList');
+            list.innerHTML = pairs.map(p => {
+                const price = (Math.random() * 50000 + 1000).toFixed(2);
+                const change = (Math.random() * 5 - 2).toFixed(2);
+                const color = change >= 0 ? 'up' : 'down';
+                return `
+                    <div class="trade-row flex justify-between items-center py-2 px-2">
+                        <span class="text-[11px] font-black">${p}</span>
+                        <span class="text-[11px] font-mono">$${price}</span>
+                        <span class="text-[11px] font-black ${color}">${change >= 0 ? '▲' : '▼'} ${Math.abs(change)}%</span>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
         function logout() { localStorage.clear(); location.reload(); }
 
         window.onload = () => {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if(saved) {
-                state = JSON.parse(saved);
-                document.getElementById('authScreen').classList.add('hidden');
-                refreshUI();
-            }
+            const s = localStorage.getItem(KEY);
+            if(s) { db = JSON.parse(s); document.getElementById('auth').classList.add('hidden'); refresh(); }
+            setInterval(genTrades, 2000); // Live trade update every 2s
+            genTrades();
         };
 
-        setInterval(() => { if(state.energy < 1000) { state.energy += 5; refreshUI(); saveState(); } }, 3000);
+        setInterval(() => { if(db.eng < 1000) { db.eng += 5; refresh(); save(); } }, 3000);
     </script>
 </body>
 </html>
