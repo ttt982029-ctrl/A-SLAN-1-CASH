@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN NETWORK | Professional Mining</title>
+    <title>A-SLAN NETWORK | Leaderboard Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
         .gold-glow { box-shadow: 0 0 50px rgba(245, 158, 11, 0.2); }
-        .page { display: none; height: 85vh; overflow-y: auto; padding-bottom: 100px; }
+        .page { display: none; height: 82vh; overflow-y: auto; padding-bottom: 100px; }
         .active-page { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .coin-btn:active { transform: scale(0.9); }
         .nav-active { color: #f59e0b; border-top: 2px solid #f59e0b; }
+        .rank-badge { background: linear-gradient(90deg, #f59e0b, #d97706); padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 900; color: #000; }
+        .leader-item { border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .leader-item:hover { background: rgba(245, 158, 11, 0.1); }
     </style>
 </head>
 <body>
@@ -22,161 +24,170 @@
     <div id="loginScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6">
         <div class="glass w-full max-w-sm p-8 rounded-[40px] text-center border-amber-500/30 border">
             <h1 class="text-4xl font-black mb-2 text-amber-500 tracking-tighter">A-SLAN</h1>
-            <p class="text-gray-400 text-xs mb-8 uppercase tracking-widest">Next-Gen Asset Network</p>
+            <p class="text-gray-400 text-[10px] mb-8 uppercase tracking-widest text-center">Join the Wealth Revolution</p>
             <div class="space-y-4">
-                <input type="text" id="userNameInput" placeholder="Enter Gmail or Name" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500 transition-all">
-                <button onclick="login()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl shadow-lg shadow-amber-500/20">ACCESS NETWORK</button>
+                <input type="text" id="userNameInput" placeholder="Enter Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
+                <button onclick="login()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl">ACCESS APP</button>
             </div>
-            <p class="text-[10px] text-gray-600 mt-6">Secured by A-SLAN Protocol v3.0</p>
         </div>
     </div>
 
-    <header class="p-5 flex justify-between items-center glass m-4 rounded-3xl">
+    <header class="p-4 flex justify-between items-center glass m-4 rounded-3xl">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-black shadow-inner">A</div>
+            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-black">A</div>
             <div>
-                <p id="topName" class="text-[10px] text-gray-500 uppercase font-bold">Explorer</p>
-                <p class="text-xs font-black text-amber-500">GOLD RANK</p>
+                <p id="topName" class="text-[10px] text-gray-500 uppercase font-bold">Guest</p>
+                <span id="rankBadge" class="rank-badge">BRONZE</span>
             </div>
         </div>
         <div class="text-right">
-            <p class="text-[10px] text-gray-500 uppercase">Total ASL</p>
-            <p id="balance" class="text-xl font-black">0.00</p>
+            <p id="balance" class="text-xl font-black text-amber-500 tracking-tighter">0.00 ASL</p>
         </div>
     </header>
 
     <main class="px-6">
-        <div id="minePage" class="page active-page text-center">
-            <div class="mb-8 mt-4">
-                <p class="text-sm text-gray-400">Mining Rate: <span class="text-amber-500">100 Taps = 1 ASL</span></p>
-            </div>
-            <div class="flex justify-center">
-                <button onclick="tap()" class="coin-btn relative outline-none">
-                    <div class="w-64 h-64 rounded-full bg-gradient-to-b from-amber-400 to-amber-800 p-2 gold-glow">
-                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-4 border-amber-600/20">
-                            <img src="https://cdn-icons-png.flaticon.com/512/8141/8141432.png" class="w-40 h-40">
-                        </div>
+        <div id="minePage" class="page active-page text-center pt-10">
+            <button onclick="tap()" class="coin-btn relative outline-none transition-transform active:scale-90">
+                <div class="w-60 h-60 rounded-full bg-gradient-to-b from-amber-400 to-amber-800 p-2 gold-glow">
+                    <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-4 border-amber-600/20">
+                        <span class="text-6xl">🦁</span>
                     </div>
-                </button>
-            </div>
-            <div class="mt-12 glass p-5 rounded-3xl">
-                <div class="flex justify-between text-[10px] mb-2 font-bold uppercase text-gray-400">
-                    <span>Energy Status</span>
+                </div>
+            </button>
+            <div class="mt-16 glass p-5 rounded-3xl">
+                <div class="flex justify-between text-[10px] mb-2 font-bold uppercase text-gray-500">
+                    <span>Mining Energy</span>
                     <span id="energyText">1000/1000</span>
                 </div>
-                <div class="w-full h-3 bg-white/5 rounded-full p-0.5">
-                    <div id="energyBar" class="h-full bg-amber-500 rounded-full transition-all duration-300 w-full"></div>
+                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div id="energyBar" class="h-full bg-amber-500 rounded-full w-full"></div>
                 </div>
             </div>
         </div>
 
-        <div id="walletPage" class="page space-y-4">
-            <div class="glass p-8 rounded-[40px] bg-gradient-to-br from-amber-500/10 to-transparent">
-                <p class="text-xs text-gray-400 uppercase tracking-widest">Available Balance</p>
-                <h2 class="text-5xl font-black mt-2 text-amber-500"><span id="walletBal">0.00</span> <span class="text-sm text-white">ASL</span></h2>
+        <div id="leaderPage" class="page pt-4">
+            <h2 class="text-2xl font-black text-amber-500 mb-6 text-center tracking-widest uppercase">Global Ranking</h2>
+            <div class="glass rounded-[30px] overflow-hidden">
+                <div id="leaderList" class="flex flex-col">
+                    </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="sendCoins()" class="glass p-6 rounded-3xl flex flex-col items-center gap-3 active:bg-amber-500/20">
-                    <i class="fa-solid fa-arrow-up-right-from-square text-amber-500"></i> <span class="text-sm font-bold">SEND</span>
-                </button>
-                <button onclick="receiveCoins()" class="glass p-6 rounded-3xl flex flex-col items-center gap-3 active:bg-amber-500/20">
-                    <i class="fa-solid fa-qrcode text-amber-500"></i> <span class="text-sm font-bold">RECEIVE</span>
-                </button>
+        </div>
+
+        <div id="walletPage" class="page space-y-4 pt-4 text-center">
+            <div class="glass p-8 rounded-[40px] border-b-2 border-amber-500/30">
+                <p class="text-[10px] text-gray-400 uppercase font-bold mb-1 tracking-widest">Available Balance</p>
+                <h2 class="text-5xl font-black text-amber-500" id="walletBal">0.00</h2>
             </div>
-            <div class="glass p-6 rounded-3xl border-l-4 border-amber-500">
-                <p class="text-xs text-gray-500 uppercase font-bold">Future Value Forecast (10Y)</p>
-                <p class="text-2xl font-black text-green-400">₹1,00,00,000 / ASL</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="generateTransferOTP()" class="glass p-5 rounded-3xl flex flex-col items-center gap-2 border border-white/5">
+                    <i class="fa-solid fa-paper-plane text-amber-500"></i>
+                    <span class="text-[10px] font-black">SEND OTP</span>
+                </button>
+                <button onclick="claimTransferOTP()" class="glass p-5 rounded-3xl flex flex-col items-center gap-2 border border-white/5">
+                    <i class="fa-solid fa-download text-green-500"></i>
+                    <span class="text-[10px] font-black">CLAIM OTP</span>
+                </button>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full glass h-20 flex justify-around items-center rounded-t-[40px] border-t border-white/10">
+    <nav class="fixed bottom-0 w-full glass h-20 flex justify-around items-center rounded-t-[40px] border-t border-white/10 z-50">
         <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-1 nav-active transition-all">
-            <i class="fa-solid fa-hammer text-xl"></i><span class="text-[10px] font-bold">MINE</span>
+            <i class="fa-solid fa-bolt text-xl"></i><span class="text-[9px] font-bold">MINE</span>
+        </button>
+        <button onclick="showPage('leaderPage', this)" class="flex flex-col items-center gap-1 text-gray-500 transition-all">
+            <i class="fa-solid fa-trophy text-xl"></i><span class="text-[9px] font-bold">RANK</span>
         </button>
         <button onclick="showPage('walletPage', this)" class="flex flex-col items-center gap-1 text-gray-500 transition-all">
-            <i class="fa-solid fa-wallet text-xl"></i><span class="text-[10px] font-bold">WALLET</span>
+            <i class="fa-solid fa-wallet text-xl"></i><span class="text-[9px] font-bold">WALLET</span>
         </button>
-        <button onclick="adminLogin()" class="flex flex-col items-center gap-1 text-gray-500 transition-all">
-            <i class="fa-solid fa-crown text-xl"></i><span class="text-[10px] font-bold">ADMIN</span>
+        <button onclick="adminAccess()" class="flex flex-col items-center gap-1 text-gray-500">
+            <i class="fa-solid fa-crown text-xl"></i><span class="text-[9px] font-bold">ADMIN</span>
         </button>
     </nav>
 
     <script>
         let balance = 0;
-        let taps = 0;
         let energy = 1000;
-        let currentUser = "";
+        let currentUser = "Guest";
+        let players = [
+            { name: "DR. HELP (MASTER)", balance: 100000, rank: "GOD" },
+            { name: "Satoshi_N", balance: 85000, rank: "DIAMOND" },
+            { name: "King_Aslan", balance: 52000, rank: "DIAMOND" },
+            { name: "Crypto_Warrior", balance: 12000, rank: "GOLD" },
+            { name: "MemeLord", balance: 5400, rank: "SILVER" }
+        ];
 
-        // LOGIN
         function login() {
             let input = document.getElementById('userNameInput').value;
-            if(input.trim() === "") return alert("Please enter a name or Gmail!");
+            if(input.trim() === "") return alert("Please enter username!");
             currentUser = input;
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('topName').innerText = currentUser;
+            updateLeaderboard();
         }
 
-        // TAP LOGIC: 100 Taps = 1 ASL
         function tap() {
-            if(energy <= 0) return alert("Energy empty! Wait for recharge.");
-            taps++;
-            energy--;
-            if(taps % 100 === 0) {
-                balance += 1;
-                vibrateDevice();
-            }
+            if(energy <= 0) return;
+            balance += 0.01; energy -= 1;
             updateUI();
         }
 
-        // ADMIN ACCESS: "Aslan Admin" to get 1 Lakh
-        function adminLogin() {
-            let pass = prompt("Enter Master Admin Key:");
-            if(pass === "Aslan Admin") {
-                balance += 100000;
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderList');
+            // Add current user to list or update balance
+            let userObj = players.find(p => p.name === currentUser);
+            if(!userObj) { players.push({ name: currentUser, balance: balance, rank: "YOU" }); }
+            else { userObj.balance = balance; }
+
+            // Sort players by balance
+            players.sort((a, b) => b.balance - a.balance);
+
+            list.innerHTML = players.map((p, index) => `
+                <div class="leader-item p-4 flex justify-between items-center ${p.name === currentUser ? 'bg-amber-500/10' : ''}">
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-500 font-bold w-4">${index + 1}</span>
+                        <div>
+                            <p class="font-black text-sm ${p.name === currentUser ? 'text-amber-500' : 'text-white'}">${p.name}</p>
+                            <p class="text-[10px] text-gray-500">${p.rank}</p>
+                        </div>
+                    </div>
+                    <p class="font-black text-amber-500 text-sm">${p.balance.toLocaleString()} ASL</p>
+                </div>
+            `).join('');
+        }
+
+        function adminAccess() {
+            let key = prompt("Enter Master Admin Key:");
+            if(key === "Aslan Admin") {
+                balance = 100000;
                 currentUser = "DR. HELP (MASTER)";
                 document.getElementById('topName').innerText = currentUser;
+                document.getElementById('rankBadge').innerText = "GOD";
                 updateUI();
-                alert("Master Access Granted! 100,000 ASL Added.");
+                updateLeaderboard();
+                alert("Master Portfolio Loaded!");
             }
         }
 
-        // SEND TO FRIEND (P2P)
-        function sendCoins() {
-            let amount = prompt("कितने ASL कॉइन्स अपने दोस्त को भेजना चाहते हैं?");
-            if(amount && !isNaN(amount) && amount <= balance) {
-                balance -= parseInt(amount);
-                updateUI();
-                let msg = `🚀 A-SLAN NETWORK: मैंने तुम्हें ${amount} ASL कॉइन्स भेजे हैं! अपना गिफ्ट यहाँ क्लेम करो: https://github.com/A-SLAN-1-CASH/`;
-                window.open(`https://t.me/share/url?url=${encodeURIComponent(msg)}`, '_blank');
-            } else {
-                alert("बैलेंस कम है या अमाउंट गलत है!");
-            }
-        }
-
-        function receiveCoins() {
-            alert("आपका रिसीविंग ID: " + currentUser + "\nअपने दोस्त को यह ID दें।");
-        }
-
-        // UI UPDATES
         function updateUI() {
-            document.getElementById('balance').innerText = balance.toLocaleString();
-            document.getElementById('walletBal').innerText = balance.toLocaleString();
-            document.getElementById('energyText').innerText = energy + "/1000";
+            document.getElementById('balance').innerText = balance.toFixed(2) + " ASL";
+            document.getElementById('walletBal').innerText = balance.toFixed(2);
             document.getElementById('energyBar').style.width = (energy / 10) + "%";
+            document.getElementById('energyText').innerText = energy + "/1000";
         }
 
-        function showPage(pageId, btn) {
+        function showPage(id, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active', 'text-gray-500'));
-            document.getElementById(pageId).classList.add('active-page');
+            document.querySelectorAll('nav button').forEach(b => b.classList.add('text-gray-500'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
+            document.getElementById(id).classList.add('active-page');
             btn.classList.add('nav-active');
+            btn.classList.remove('text-gray-500');
+            if(id === 'leaderPage') updateLeaderboard();
         }
 
-        function vibrateDevice() { if (navigator.vibrate) navigator.vibrate(50); }
-
-        // ENERGY REGEN
-        setInterval(() => { if(energy < 1000) { energy += 5; updateUI(); } }, 3000);
+        setInterval(() => { if(energy < 1000) energy += 5; updateUI(); }, 3000);
     </script>
 </body>
 </html>
