@@ -3,197 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN NETWORK | Founder Edition</title>
+    <title>A-SLAN NETWORK | X-Rank Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
-        .gold-glow { box-shadow: 0 0 50px rgba(245, 158, 11, 0.3); }
-        .page { display: none; height: 82vh; overflow-y: auto; padding-bottom: 100px; }
-        .active-page { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .nav-active { color: #f59e0b; border-top: 2px solid #f59e0b; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+        .gold-glow { box-shadow: 0 0 60px rgba(245, 158, 11, 0.3); }
+        .page { display: none; height: 82vh; overflow-y: auto; padding-bottom: 120px; }
+        .active-page { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .rank-card { background: linear-gradient(135deg, rgba(245,158,11,0.2), transparent); border-left: 4px solid #f59e0b; }
+        .nav-active { color: #f59e0b; position: relative; }
+        .nav-active::after { content: ''; position: absolute; top: -10px; width: 20px; height: 4px; background: #f59e0b; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6 text-center">
-        <div class="glass w-full max-w-sm p-8 rounded-[40px] border-amber-500/30 border">
-            <h1 class="text-5xl font-black mb-2 text-amber-500 italic tracking-tighter">A-SLAN</h1>
-            <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] mb-8 font-bold">Network Access</p>
+    <div id="authScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6">
+        <div class="glass w-full max-w-sm p-10 rounded-[50px] text-center border-amber-500/20 border">
+            <h1 class="text-5xl font-black mb-1 text-amber-500 italic tracking-tighter">A-SLAN</h1>
+            <p class="text-[9px] text-gray-500 uppercase tracking-[0.5em] mb-10">The X Protocol</p>
             
             <div class="space-y-4">
-                <input type="text" id="authName" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
-                <input type="password" id="authPass" placeholder="Password" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
+                <input type="text" id="authName" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500 transition-all">
+                <input type="password" id="authPass" placeholder="Security Code" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500 transition-all">
                 
-                <div id="signupBox">
-                    <button onclick="handleAuth('signup')" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl shadow-lg shadow-amber-500/20">START MINING</button>
-                    <p class="text-[10px] mt-4 text-gray-400">Already a member? <span onclick="toggleAuth(true)" class="text-amber-500 cursor-pointer font-bold">Login</span></p>
-                </div>
-                
-                <div id="loginBox" class="hidden">
-                    <button onclick="handleAuth('login')" class="w-full bg-white text-black font-black p-4 rounded-2xl">LOGIN</button>
-                    <p class="text-[10px] mt-4 text-gray-400">New here? <span onclick="toggleAuth(false)" class="text-amber-500 cursor-pointer font-bold">Sign Up</span></p>
-                </div>
+                <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-4 rounded-3xl shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform">INITIALIZE ACCESS</button>
             </div>
+            <p class="text-[10px] text-gray-600 mt-8">Encrypted & Secured by DR. HELP</p>
         </div>
     </div>
 
     <div id="mainApp" class="hidden">
-        <header class="p-4 flex justify-between items-center glass m-4 rounded-3xl">
+        <header class="p-4 flex justify-between items-center glass m-4 rounded-[30px]">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-black shadow-lg">A</div>
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-crown text-xl"></i>
+                </div>
                 <div>
-                    <p id="topName" class="text-[10px] text-gray-400 font-black uppercase tracking-tighter"></p>
-                    <span id="rankBadge" class="text-[9px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black">MINER</span>
+                    <p id="topName" class="text-xs font-black uppercase tracking-widest text-white"></p>
+                    <span id="currentRankBadge" class="text-[9px] font-black text-amber-500 uppercase tracking-widest">BRONZE MINER</span>
                 </div>
             </div>
             <div class="text-right">
+                <p class="text-[10px] text-gray-500 font-bold">NET WORTH</p>
                 <p id="balance" class="text-xl font-black text-amber-500 tracking-tighter">0.00 ASL</p>
             </div>
         </header>
 
         <main class="px-6">
-            <div id="minePage" class="page active-page text-center pt-10">
-                <button onclick="tap()" class="coin-btn relative outline-none transition-transform active:scale-90">
-                    <div class="w-64 h-64 rounded-full bg-gradient-to-b from-amber-400 to-amber-800 p-2 gold-glow">
-                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-4 border-amber-600/20">
-                            <span class="text-7xl">🦁</span>
+            <div id="minePage" class="page active-page text-center pt-8">
+                <div class="mb-10">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 font-bold">Mining in Progress</p>
+                    <div id="bonusTag" class="hidden text-amber-500 text-[10px] font-black italic underline">FOUNDER BONUS ACTIVE</div>
+                </div>
+                
+                <button onclick="tap()" class="relative active:scale-90 transition-transform outline-none">
+                    <div class="w-72 h-72 rounded-full bg-gradient-to-b from-amber-300 via-amber-600 to-amber-900 p-3 gold-glow">
+                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-8 border-white/5">
+                            <span class="text-8xl">🦁</span>
                         </div>
                     </div>
                 </button>
-                <div class="mt-16 glass p-5 rounded-3xl">
-                    <div class="flex justify-between text-[10px] mb-2 font-bold uppercase text-gray-500">
-                        <span>Energy</span>
+
+                <div class="mt-16 glass p-6 rounded-[35px] border border-white/5">
+                    <div class="flex justify-between text-[10px] mb-3 font-black text-gray-400 tracking-widest uppercase">
+                        <span>Energy Reserves</span>
                         <span id="energyText">1000/1000</span>
                     </div>
-                    <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                        <div id="energyBar" class="h-full bg-amber-500 rounded-full w-full transition-all"></div>
+                    <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div id="energyBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-300 rounded-full w-full transition-all"></div>
                     </div>
                 </div>
             </div>
 
-            <div id="walletPage" class="page space-y-4 pt-4 text-center">
-                <div class="glass p-8 rounded-[40px] border-b-4 border-amber-500/50">
-                    <p class="text-[10px] text-gray-400 uppercase font-black mb-1 tracking-widest">Global Assets</p>
-                    <h2 class="text-5xl font-black text-amber-500" id="walletBal">0.00</h2>
+            <div id="rankPage" class="page pt-4">
+                <h2 class="text-2xl font-black text-amber-500 mb-6 text-center italic uppercase tracking-widest">X-Rank Protocol</h2>
+                
+                <div class="glass p-6 rounded-3xl mb-6 border-l-4 border-amber-500 bg-amber-500/5">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-bold text-gray-400">Current Rank:</span>
+                        <span id="rankTitle" class="text-sm font-black text-white uppercase">BRONZE</span>
+                    </div>
+                    <p id="nextRankReq" class="text-[10px] text-amber-500/70 font-bold uppercase"></p>
                 </div>
-                <button onclick="logout()" class="text-red-500 text-[10px] font-black uppercase tracking-widest opacity-50 mt-10">Sign Out</button>
+
+                <p class="text-[10px] text-gray-500 font-black mb-4 uppercase tracking-[0.2em]">Top Asset Holders</p>
+                <div id="leaderList" class="space-y-3">
+                    </div>
+            </div>
+
+            <div id="walletPage" class="page pt-4 space-y-4 text-center">
+                <div class="glass p-10 rounded-[40px] border-b-4 border-amber-500 shadow-2xl">
+                    <p class="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-2">Total Balance</p>
+                    <h2 class="text-6xl font-black text-white italic" id="walletBal">0.00</h2>
+                    <p class="text-xs text-amber-500 font-bold mt-4">X-Network Verified Account</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="generateOTP()" class="glass p-6 rounded-[30px] flex flex-col items-center gap-3 active:bg-amber-500/20 transition-all border border-white/5">
+                        <i class="fa-solid fa-paper-plane text-2xl text-amber-500"></i>
+                        <span class="text-[10px] font-black uppercase">Send OTP</span>
+                    </button>
+                    <button onclick="claimOTP()" class="glass p-6 rounded-[30px] flex flex-col items-center gap-3 active:bg-green-500/20 transition-all border border-white/5">
+                        <i class="fa-solid fa-download text-2xl text-green-500"></i>
+                        <span class="text-[10px] font-black uppercase">Claim OTP</span>
+                    </button>
+                </div>
+                
+                <button onclick="logout()" class="text-[9px] font-black text-red-500/50 uppercase tracking-widest mt-10">Destroy Session</button>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 w-full glass h-20 flex justify-around items-center rounded-t-[40px] border-t border-white/10 z-50">
-            <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-1 nav-active transition-all">
-                <i class="fa-solid fa-hammer text-xl"></i><span class="text-[9px] font-black uppercase">Mine</span>
+        <nav class="fixed bottom-0 w-full glass h-24 flex justify-around items-center rounded-t-[50px] border-t border-white/10 z-[200]">
+            <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-2 nav-active">
+                <i class="fa-solid fa-bolt-lightning text-2xl"></i><span class="text-[9px] font-black uppercase">Mine</span>
             </button>
-            <button onclick="showPage('walletPage', this)" class="flex flex-col items-center gap-1 text-gray-500 transition-all">
-                <i class="fa-solid fa-wallet text-xl"></i><span class="text-[9px] font-black uppercase">Wallet</span>
+            <button onclick="showPage('rankPage', this)" class="flex flex-col items-center gap-2 text-gray-500">
+                <i class="fa-solid fa-chart-line text-2xl"></i><span class="text-[9px] font-black uppercase">X-Rank</span>
             </button>
-            <button onclick="adminAccess()" class="flex flex-col items-center gap-1 text-gray-500">
-                <i class="fa-solid fa-crown text-xl"></i><span class="text-[9px] font-black uppercase">Admin</span>
+            <button onclick="showPage('walletPage', this)" class="flex flex-col items-center gap-2 text-gray-500">
+                <i class="fa-solid fa-wallet text-2xl"></i><span class="text-[9px] font-black uppercase">Wallet</span>
+            </button>
+            <button onclick="adminKey()" class="flex flex-col items-center gap-2 text-gray-500">
+                <i class="fa-solid fa-shield text-2xl"></i><span class="text-[9px] font-black uppercase">Admin</span>
             </button>
         </nav>
     </div>
 
     <script>
-        // Force cleanup once to ensure you are the first
-        if (!localStorage.getItem('aslan_v3_reset')) {
+        // CLEAN START v4
+        if(!localStorage.getItem('aslan_v4_reset')) {
             localStorage.clear();
-            localStorage.setItem('aslan_v3_reset', 'done');
-            localStorage.setItem('aslan_claimed', 'false'); // Bonus status
+            localStorage.setItem('aslan_v4_reset', 'true');
         }
 
-        let userData = { name: "", pass: "", balance: 0, energy: 1000 };
+        let userData = { name: "", pass: "", balance: 0, energy: 1000, rank: "BRONZE" };
+        let demoPlayers = [
+            { name: "Satoshi_V", balance: 50000000, rank: "X-LEVEL" },
+            { name: "King_Aslan", balance: 25000000, rank: "X-LEVEL" },
+            { name: "Crypto_Lion", balance: 5000000, rank: "MILLIONAIRE" }
+        ];
 
         window.onload = function() {
-            const savedData = localStorage.getItem('aslan_user');
-            if (savedData) {
-                userData = JSON.parse(savedData);
-                enterApp();
-            }
-        };
-
-        function toggleAuth(isLogin) {
-            document.getElementById('signupBox').style.display = isLogin ? 'none' : 'block';
-            document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none';
+            const saved = localStorage.getItem('aslan_user');
+            if(saved) { userData = JSON.parse(saved); enterApp(); }
         }
 
-        function handleAuth(type) {
+        function handleAuth() {
             const name = document.getElementById('authName').value;
             const pass = document.getElementById('authPass').value;
 
-            if (name.length < 3 || pass.length < 3) return alert("Username/Password too short!");
+            if(name === "" || pass === "") return alert("Enter credentials!");
 
-            if (type === 'signup') {
-                // FOUNDER LOGIC: Only the first person ever gets the bonus
-                let isClaimed = localStorage.getItem('aslan_claimed');
-                let bonus = 0;
-
-                if (isClaimed === 'false') {
-                    bonus = 1000000;
-                    localStorage.setItem('aslan_claimed', 'true');
-                    alert("FOUNDER REWARD: 1,000,000 ASL Claimed!");
-                } else {
-                    bonus = 0;
-                }
-
-                userData = { name, pass, balance: bonus, energy: 1000 };
-                saveData();
-                enterApp();
+            // --- THE 10 MILLION FOUNDER BONUS ---
+            if(name === "DR. HELP" && pass === "143143" && !localStorage.getItem('founder_claimed')) {
+                userData = { name, pass, balance: 10000000, energy: 1000 };
+                localStorage.setItem('founder_claimed', 'true');
+                alert("🦁 ACCESS GRANTED! Welcome DR. HELP. 10,000,000 ASL Added.");
             } else {
-                const saved = JSON.parse(localStorage.getItem('aslan_user'));
-                if (saved && saved.name === name && saved.pass === pass) {
-                    userData = saved;
-                    enterApp();
-                } else {
-                    alert("Wrong Credentials!");
-                }
+                userData = { name, pass, balance: 0, energy: 1000 };
             }
+
+            saveData();
+            enterApp();
         }
 
         function enterApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('topName').innerText = userData.name;
-            if(userData.balance >= 1000000) document.getElementById('rankBadge').innerText = "FOUNDER";
             updateUI();
         }
 
         function tap() {
-            if (userData.energy <= 0) return;
-            userData.balance += 0.01;
+            if(userData.energy <= 0) return;
+            userData.balance += 0.05;
             userData.energy -= 1;
             updateUI();
             saveData();
         }
 
-        function adminAccess() {
-            let key = prompt("Master Access Key:");
-            if (key === "Aslan Admin") {
-                userData.balance += 5000000;
-                userData.name = "DR. HELP (MASTER)";
-                saveData();
-                location.reload(); 
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem('aslan_user', JSON.stringify(userData));
-        }
-
-        function logout() {
-            if(confirm("Logout?")) {
-                localStorage.removeItem('aslan_user');
-                location.reload();
-            }
-        }
-
         function updateUI() {
             document.getElementById('balance').innerText = userData.balance.toLocaleString(undefined, {minimumFractionDigits: 2}) + " ASL";
-            document.getElementById('walletBal').innerText = userData.balance.toLocaleString();
-            document.getElementById('energyBar').style.width = (userData.energy / 10) + "%";
+            document.getElementById('walletBal').innerText = Math.floor(userData.balance).toLocaleString();
             document.getElementById('energyText').innerText = userData.energy + "/1000";
+            document.getElementById('energyBar').style.width = (userData.energy/10) + "%";
+            
+            // DYNAMIC RANKING LOGIC
+            let r = "BRONZE MINER";
+            let next = "Next: SILVER at 1,000";
+            if(userData.balance >= 1000000000000) { r = "X-TREME OVERLORD"; next = "MAX RANK REACHED"; }
+            else if(userData.balance >= 10000000) { r = "X-LEVEL LEGEND"; next = "Next: TRILLIONAIRE at 1T"; }
+            else if(userData.balance >= 1000000) { r = "MILLIONAIRE"; next = "Next: X-LEVEL at 10M"; }
+            else if(userData.balance >= 10000) { r = "GOLD ELITE"; next = "Next: MILLIONAIRE at 1M"; }
+            else if(userData.balance >= 1000) { r = "SILVER PRO"; next = "Next: GOLD at 10k"; }
+            
+            userData.rank = r;
+            document.getElementById('rankTitle').innerText = r;
+            document.getElementById('currentRankBadge').innerText = r;
+            document.getElementById('nextRankReq').innerText = next;
+        }
+
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderList');
+            let all = [...demoPlayers, { name: userData.name, balance: userData.balance, rank: userData.rank }];
+            all.sort((a,b) => b.balance - a.balance);
+
+            list.innerHTML = all.map((p, i) => `
+                <div class="leader-item glass p-4 rounded-2xl flex justify-between items-center ${p.name === userData.name ? 'border-amber-500 bg-amber-500/10' : ''}">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-black text-gray-500">#${i+1}</span>
+                        <div>
+                            <p class="text-xs font-black uppercase ${p.name === userData.name ? 'text-amber-500' : 'text-white'}">${p.name}</p>
+                            <p class="text-[8px] text-gray-500 font-bold uppercase">${p.rank}</p>
+                        </div>
+                    </div>
+                    <p class="text-xs font-black text-amber-500">${Math.floor(p.balance).toLocaleString()} ASL</p>
+                </div>
+            `).join('');
         }
 
         function showPage(id, btn) {
@@ -201,9 +230,22 @@
             document.querySelectorAll('nav button').forEach(b => { b.classList.add('text-gray-500'); b.classList.remove('nav-active'); });
             document.getElementById(id).classList.add('active-page');
             btn.classList.add('nav-active'); btn.classList.remove('text-gray-500');
+            if(id === 'rankPage') updateLeaderboard();
         }
 
-        setInterval(() => { if (userData.energy < 1000) { userData.energy += 5; updateUI(); saveData(); } }, 4000);
+        function adminKey() {
+            let k = prompt("Master Access Key:");
+            if(k === "Aslan Admin") {
+                userData.balance += 50000000;
+                userData.name = "DR. HELP (MASTER)";
+                saveData(); updateUI(); alert("Master Power Active!");
+            }
+        }
+
+        function saveData() { localStorage.setItem('aslan_user', JSON.stringify(userData)); }
+        function logout() { if(confirm("Clear Account?")) { localStorage.clear(); location.reload(); } }
+
+        setInterval(() => { if(userData.energy < 1000) { userData.energy += 5; updateUI(); saveData(); } }, 3000);
     </script>
 </body>
 </html>
