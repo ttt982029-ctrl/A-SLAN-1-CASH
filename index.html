@@ -1,244 +1,208 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN | Neon Genesis</title>
+    <title>A-SLAN | Secret Key Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #f59e0b; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; overflow: hidden; }
-        
-        /* The Master Hexagon Coin */
-        .master-coin {
-            width: 260px; height: 260px;
-            background: linear-gradient(135deg, #f59e0b, #78350f);
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            position: relative; transition: all 0.1s;
-            box-shadow: 0 0 50px rgba(245, 158, 11, 0.4);
-        }
-        .master-coin:active { transform: scale(0.92) rotate(5deg); }
-        .inner-hex {
-            position: absolute; inset: 6px; background: #000;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            display: flex; items-center; justify-content: center;
-        }
-
-        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(245, 158, 11, 0.1); border-radius: 40px; }
-        .neon-text { text-shadow: 0 0 10px rgba(245, 158, 11, 0.8); }
-        .nav-btn { transition: all 0.3s; opacity: 0.4; }
-        .nav-btn.active { opacity: 1; color: var(--neon); transform: translateY(-5px); }
-        
-        /* Floating Dots Menu */
-        .dots-btn { width: 40px; height: 40px; display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; }
-        .dot { width: 4px; height: 4px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 5px var(--neon); }
-        
-        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
-        .pulse { animation: pulse-gold 2s infinite; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+        .page { display: none; height: 80vh; overflow-y: auto; padding-bottom: 120px; }
+        .active-page { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .nav-active { color: #f59e0b; border-bottom: 3px solid #f59e0b; }
+        .menu-drop { display: none; position: absolute; right: 10px; top: 60px; z-index: 1000; width: 150px; }
+        .menu-active { display: block; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="fixed inset-0 z-[500] bg-black flex flex-col items-center justify-center p-8 transition-all duration-700">
-        <div class="mb-12 text-center">
-            <h1 class="text-6xl font-black italic tracking-tighter neon-text text-amber-500">A-SLAN</h1>
-            <p class="text-[10px] tracking-[0.6em] text-gray-500 font-bold">NEON GENESIS PROTOCOL</p>
-        </div>
-        <div class="glass-panel p-8 w-full max-w-sm space-y-4">
-            <input type="text" id="authName" placeholder="IDENTITY" class="w-full bg-white/5 p-5 rounded-2xl border border-white/10 outline-none focus:border-amber-500 text-center uppercase tracking-widest">
-            <input type="password" id="authPass" placeholder="PASSCODE" class="w-full bg-white/5 p-5 rounded-2xl border border-white/10 outline-none focus:border-amber-500 text-center tracking-widest">
-            <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-5 rounded-3xl shadow-xl hover:bg-amber-400 transition-all">INITIALIZE</button>
+    <div id="authScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6">
+        <div class="glass w-full max-w-sm p-10 rounded-[50px] text-center border-amber-500/20 border shadow-2xl">
+            <h1 class="text-5xl font-black mb-1 text-amber-500 italic tracking-tighter">A-SLAN</h1>
+            <p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] mb-10 font-bold">Secure Access</p>
+            <div class="space-y-4">
+                <input type="text" id="authName" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
+                <input type="password" id="authPass" placeholder="Security Code" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
+                <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-4 rounded-3xl active:scale-95 transition-all">CONNECT</button>
+            </div>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden h-screen flex flex-col">
-        
-        <header class="p-6 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 glass-panel flex items-center justify-center border-amber-500/30">
-                    <i class="fa-solid fa-bolt-lightning text-amber-500 text-xl shadow-lg"></i>
-                </div>
+    <div id="mainApp" class="hidden">
+        <header class="p-4 flex justify-between items-center glass m-4 rounded-[25px] relative">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black shadow-lg shadow-amber-500/20">🦁</div>
                 <div>
-                    <h2 id="topName" class="text-sm font-black italic tracking-wider">---</h2>
-                    <div id="rankLabel" class="text-[8px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full inline-block font-bold">SCANNING...</div>
+                    <p id="topName" class="text-[10px] font-black uppercase text-white"></p>
+                    <span id="rankBadge" class="text-[8px] font-black text-amber-500 uppercase">IDENTIFIED</span>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-6">
-                <div class="text-right">
-                    <span class="text-[8px] text-gray-500 block font-bold">TOTAL ASSETS</span>
-                    <span id="balance" class="text-2xl font-black neon-text text-amber-500 tracking-tighter">0</span>
-                </div>
-                <button onclick="toggleMenu()" class="dots-btn glass-panel">
-                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                </button>
+            <div class="flex items-center gap-3">
+                <p id="balance" class="text-xl font-black text-amber-500 tracking-tighter">0</p>
+                <button onclick="toggleMenu()" class="text-gray-400 p-1"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+            </div>
+            <div id="dropMenu" class="menu-drop glass rounded-2xl p-2 border border-white/10">
+                <button onclick="logout()" class="w-full text-left p-3 text-red-500 text-xs font-bold uppercase rounded-xl">Logout</button>
             </div>
         </header>
 
-        <div id="dropMenu" class="hidden absolute top-24 right-6 z-[200] glass-panel w-48 overflow-hidden">
-            <button onclick="logout()" class="w-full p-4 text-left text-xs font-black text-red-500 hover:bg-red-500/10"><i class="fa-solid fa-power-off mr-3"></i>TERMINATE</button>
+        <div class="fixed right-6 bottom-32 z-[150]">
+            <button onclick="openSendModal()" class="w-14 h-14 bg-amber-500 rounded-full flex items-center justify-center border-4 border-black active:scale-90 shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-paper-plane text-black"></i>
+            </button>
+            <p class="text-[7px] text-center font-black text-amber-500 uppercase mt-1">Transfer</p>
         </div>
 
-        <main class="flex-1 px-6 flex flex-col items-center justify-center">
-            
-            <div id="minePage" class="page active-page w-full flex flex-col items-center">
-                <div class="mb-10 text-center">
-                    <div class="text-[10px] text-amber-500 font-black tracking-widest uppercase mb-2">Mining Velocity</div>
-                    <div id="rateValue" class="text-xs italic text-gray-400">0.00 ASL / CLICK</div>
-                </div>
-
-                <button onclick="tap()" class="master-coin pulse">
-                    <div class="inner-hex">
-                        <span class="text-8xl filter drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">🦁</span>
+        <main class="px-6">
+            <div id="minePage" class="page active-page text-center pt-10">
+                <p id="tapRate" class="text-[9px] text-amber-500/60 uppercase font-black tracking-widest mb-6">Rate: 5 ASL/Tap</p>
+                <button onclick="tap()" class="active:scale-90 transition-transform">
+                    <div class="w-64 h-64 rounded-full bg-gradient-to-br from-amber-400 to-amber-900 p-1.5 shadow-[0_0_50px_rgba(245,158,11,0.2)]">
+                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border border-white/10">
+                            <span class="text-7xl">🦁</span>
+                        </div>
                     </div>
                 </button>
-
-                <div class="w-full mt-16 max-w-sm glass-panel p-6 border-amber-500/5">
-                    <div class="flex justify-between items-end mb-4 font-black">
-                        <span class="text-[9px] text-gray-500 tracking-[0.2em]">ENERGY CORE</span>
-                        <span id="energyText" class="text-xs text-amber-500">1000/1000</span>
-                    </div>
-                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div id="energyBar" class="h-full bg-gradient-to-r from-amber-700 to-amber-400 rounded-full transition-all duration-300"></div>
-                    </div>
+                <div class="mt-14 glass p-5 rounded-[30px]">
+                    <div class="flex justify-between text-[9px] mb-2 font-black text-gray-500 uppercase"><span>Energy</span><span id="energyText">1000/1000</span></div>
+                    <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden"><div id="energyBar" class="h-full bg-amber-500 rounded-full w-full"></div></div>
                 </div>
             </div>
 
-            <div id="rankPage" class="page w-full space-y-4">
-                <h3 class="text-center text-amber-500 font-black italic tracking-widest mb-8 uppercase">Genesis Council</h3>
-                <div id="rankList" class="space-y-3"></div>
-            </div>
+            <div id="rankPage" class="page pt-4"><div id="leaderList" class="space-y-3"></div></div>
         </main>
 
-        <button onclick="openPortal('send')" class="fixed right-6 bottom-32 w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 active:scale-90 border-t-2 border-white/30">
-            <i class="fa-solid fa-arrows-up-down-left-right text-black text-xl"></i>
-        </button>
-
-        <nav class="h-24 glass-panel m-4 mt-0 border-t-0 rounded-t-none flex justify-around items-center">
-            <button onclick="showPage('minePage', this)" class="nav-btn active flex flex-col items-center gap-1">
-                <i class="fa-solid fa-cube text-xl"></i><span class="text-[8px] font-black uppercase">Core</span>
-            </button>
-            <button onclick="showPage('rankPage', this)" class="nav-btn flex flex-col items-center gap-1">
-                <i class="fa-solid fa-crown text-xl"></i><span class="text-[8px] font-black uppercase">Council</span>
-            </button>
-            <button onclick="openPortal('receive')" class="nav-btn flex flex-col items-center gap-1">
-                <i class="fa-solid fa-satellite-dish text-xl"></i><span class="text-[8px] font-black uppercase">Sync</span>
-            </button>
+        <nav class="fixed bottom-0 w-full glass h-20 flex justify-around items-center rounded-t-[40px] border-t border-white/10 z-[200]">
+            <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-1 nav-active text-amber-500"><i class="fa-solid fa-bolt text-xl"></i><span class="text-[8px] font-bold uppercase">Mine</span></button>
+            <button onclick="showPage('rankPage', this)" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-trophy text-xl"></i><span class="text-[8px] font-bold uppercase">Rank</span></button>
+            <button onclick="openReceiveModal()" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-hand-holding-dollar text-xl"></i><span class="text-[8px] font-bold uppercase">Receive</span></button>
         </nav>
     </div>
 
-    <div id="portalModal" class="hidden fixed inset-0 z-[600] bg-black/95 backdrop-blur-xl flex items-center justify-center p-8">
-        <div class="glass-panel p-10 w-full max-w-sm border-amber-500/40 text-center">
-            <h2 id="portalTitle" class="text-2xl font-black italic text-amber-500 mb-8 tracking-widest uppercase">SEND ASSET</h2>
-            <div id="portalInputGroup" class="space-y-6">
-                <div id="sendGroup">
-                    <input type="number" id="pAmt" placeholder="AMOUNT" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-bold mb-4 outline-none focus:border-amber-500">
-                    <input type="text" id="pKey" maxlength="3" placeholder="SECRET KEY (3 CHARS)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-black tracking-[1em] outline-none focus:border-amber-500 uppercase">
-                    <button onclick="executeSend()" class="w-full bg-amber-500 text-black font-black p-5 mt-6 rounded-2xl shadow-lg">LOCK TRANSFER</button>
-                </div>
-                <div id="receiveGroup" class="hidden">
-                    <input type="text" id="rKey" maxlength="3" placeholder="INPUT SECRET KEY" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-black tracking-[1em] outline-none focus:border-amber-500 uppercase">
-                    <button onclick="executeReceive()" class="w-full bg-white text-black font-black p-5 mt-6 rounded-2xl shadow-lg">SYNC ASSETS</button>
-                </div>
+    <div id="sendModal" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass w-full max-w-sm p-8 rounded-[40px] border border-amber-500/30">
+            <h2 class="text-lg font-black text-amber-500 mb-6 uppercase italic">Create Transfer</h2>
+            <div id="step1">
+                <input type="number" id="amtInput" placeholder="How many coins?" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-4 focus:border-amber-500 outline-none font-bold">
+                <button onclick="goToStep2()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl uppercase text-xs">Next Step</button>
             </div>
-            <button onclick="closePortal()" class="mt-8 text-[9px] text-gray-500 font-black tracking-widest uppercase">Abort Sync</button>
+            <div id="step2" class="hidden">
+                <p class="text-[10px] text-gray-400 mb-4 uppercase font-bold">Create a 3-Character Password:</p>
+                <input type="text" id="customPass" maxlength="3" placeholder="e.g. 786" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-4 focus:border-amber-500 outline-none font-black text-xl tracking-[1em]">
+                <button onclick="finalizeSend()" class="w-full bg-amber-500 text-black font-black p-4 rounded-2xl uppercase text-xs">Lock & Share</button>
+            </div>
+            <button onclick="closeModals()" class="mt-4 text-[10px] text-gray-500 uppercase font-bold">Cancel</button>
+        </div>
+    </div>
+
+    <div id="receiveModal" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass w-full max-w-sm p-8 rounded-[40px] border border-blue-500/30">
+            <h2 class="text-lg font-black text-blue-500 mb-6 uppercase italic">Receive Coins</h2>
+            <p class="text-[10px] text-gray-400 mb-4 uppercase font-bold">Enter the 3-Character Password:</p>
+            <input type="text" id="claimPass" maxlength="3" placeholder="???" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center mb-6 focus:border-blue-500 outline-none font-black text-xl tracking-[1em]">
+            <button onclick="claimCoins()" class="w-full bg-blue-500 text-white font-black p-4 rounded-2xl uppercase text-xs">Claim ASL</button>
+            <button onclick="closeModals()" class="mt-4 text-[10px] text-gray-500 uppercase font-bold">Cancel</button>
         </div>
     </div>
 
     <script>
-        let user = { name: "", pass: "", bal: 0, energy: 1000, pos: 0 };
-        const REG_KEY = 'aslan_genesis_count';
-        const TRX_KEY = 'aslan_genesis_trx';
+        let userData = { name: "", pass: "", balance: 0, energy: 1000, position: 0 };
+        const REG_KEY = 'aslan_reg_order';
+        const TRX_KEY = 'aslan_secret_trx'; // Global store for transactions
 
-        window.onload = () => {
-            const saved = localStorage.getItem('aslan_user_master');
-            if(saved) { user = JSON.parse(saved); enterApp(); }
+        window.onload = function() {
+            const saved = localStorage.getItem('aslan_user');
+            if(saved) { userData = JSON.parse(saved); enterApp(); }
         }
 
-        function toggleMenu() { document.getElementById('dropMenu').classList.toggle('hidden'); }
+        function toggleMenu() { document.getElementById('dropMenu').classList.toggle('menu-active'); }
 
         function handleAuth() {
-            const n = document.getElementById('authName').value.toUpperCase();
-            const p = document.getElementById('authPass').value;
-            if(!n || !p) return;
-
-            if(n === "DR. HELP" && p === "143143") {
-                user = JSON.parse(localStorage.getItem('aslan_user_master')) || { name: n, pass: p, bal: 10000000, energy: 1000, pos: 1 };
-            } else {
+            const name = document.getElementById('authName').value;
+            const pass = document.getElementById('authPass').value;
+            if(name === "DR. HELP" && pass === "143143") {
+                userData = JSON.parse(localStorage.getItem('aslan_user')) || { name, pass, balance: 10000000, energy: 1000, position: 1 };
+                saveData(); enterApp();
+            } else if(name && pass) {
                 let count = parseInt(localStorage.getItem(REG_KEY)) || 1;
                 count++; localStorage.setItem(REG_KEY, count);
-                let bonus = (count <= 3) ? 100000 : 0;
-                user = { name: n, pass: p, bal: bonus, energy: 1000, pos: count };
+                let bonus = (count === 2 || count === 3) ? 100000 : 0;
+                userData = { name, pass, balance: bonus, energy: 1000, position: count };
+                saveData(); enterApp();
             }
-            saveData(); enterApp();
         }
 
         function tap() {
-            if(user.energy <= 0) return;
-            let pwr = (user.pos === 1) ? 500 : (user.pos <= 3 ? 100 : 5);
-            user.bal += pwr; user.energy -= 1;
+            if(userData.energy <= 0) return;
+            let pwr = (userData.position === 1) ? 500 : (userData.position <= 3 ? 100 : 5);
+            userData.balance += pwr; userData.energy -= 1;
             updateUI(); saveData();
         }
 
         function updateUI() {
-            document.getElementById('topName').innerText = user.name;
-            document.getElementById('balance').innerText = Math.floor(user.bal).toLocaleString();
-            document.getElementById('energyBar').style.width = (user.energy/10) + "%";
-            document.getElementById('energyText').innerText = user.energy + "/1000";
-            let r = "CITIZEN";
-            if(user.pos === 1) r = "SUPREME FOUNDER";
-            else if(user.pos === 2) r = "EXECUTIVE DELEGATE";
-            else if(user.pos === 3) r = "PREMIUM MEMBER";
-            document.getElementById('rankLabel').innerText = r;
-            document.getElementById('rateValue').innerText = (user.pos === 1 ? 500 : (user.pos <= 3 ? 100 : 5)) + ".00 ASL / CLICK";
+            document.getElementById('topName').innerText = userData.name;
+            document.getElementById('balance').innerText = Math.floor(userData.balance).toLocaleString();
+            document.getElementById('energyBar').style.width = (userData.energy/10) + "%";
+            document.getElementById('energyText').innerText = userData.energy + "/1000";
+            document.getElementById('tapRate').innerText = `Rate: ${(userData.position === 1 ? 500 : (userData.position <= 3 ? 100 : 5))} ASL/Tap`;
         }
 
-        function openPortal(mode) {
-            document.getElementById('portalModal').classList.remove('hidden');
-            if(mode === 'send') {
-                document.getElementById('portalTitle').innerText = "SEND ASSET";
-                document.getElementById('sendGroup').classList.remove('hidden');
-                document.getElementById('receiveGroup').classList.add('hidden');
-            } else {
-                document.getElementById('portalTitle').innerText = "SYNC ASSET";
-                document.getElementById('sendGroup').classList.add('hidden');
-                document.getElementById('receiveGroup').classList.remove('hidden');
-            }
-        }
-        function closePortal() { document.getElementById('portalModal').classList.add('hidden'); }
-
-        function executeSend() {
-            let amt = parseInt(document.getElementById('pAmt').value);
-            let key = document.getElementById('pKey').value.toUpperCase();
-            if(amt > user.bal || key.length !== 3) return alert("System Error: Check Amount/Key");
-            
-            let trx = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-            trx.push({ key, amt });
-            localStorage.setItem(TRX_KEY, JSON.stringify(trx));
-            
-            user.bal -= amt; saveData(); updateUI();
-            alert("ASSET LOCKED. SHARE KEY: " + key); closePortal();
+        // --- TRANSFER LOGIC ---
+        function openSendModal() { document.getElementById('sendModal').classList.remove('hidden'); }
+        function openReceiveModal() { document.getElementById('receiveModal').classList.remove('hidden'); }
+        function closeModals() { 
+            document.querySelectorAll('#sendModal, #receiveModal').forEach(m => m.classList.add('hidden')); 
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
         }
 
-        function executeReceive() {
-            let key = document.getElementById('rKey').value.toUpperCase();
-            let trx = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
-            let idx = trx.findIndex(t => t.key === key);
-            if(idx !== -1) {
-                user.bal += trx[idx].amt;
-                trx.splice(idx, 1);
-                localStorage.setItem(TRX_KEY, JSON.stringify(trx));
-                saveData(); updateUI(); alert("SYNC SUCCESSFUL!"); closePortal();
-            } else alert("Invalid Master Key");
+        function goToStep2() {
+            let amt = parseInt(document.getElementById('amtInput').value);
+            if(amt > 0 && amt <= userData.balance) {
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+            } else alert("Invalid Amount!");
         }
 
-        function enterApp() { document.getElementById('authScreen').classList.add('opacity-0'); setTimeout(() => { document.getElementById('authScreen').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); updateUI(); }, 500); }
-        function showPage(id, btn) { document.querySelectorAll('.page').forEach(p => p.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-        function saveData() { localStorage.setItem('aslan_user_master', JSON.stringify(user)); }
+        function finalizeSend() {
+            let amt = parseInt(document.getElementById('amtInput').value);
+            let pass = document.getElementById('customPass').value;
+            if(pass.length !== 3) return alert("Password must be exactly 3 characters!");
+
+            let pending = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+            pending.push({ key: pass, amount: amt });
+            localStorage.setItem(TRX_KEY, JSON.stringify(pending));
+
+            userData.balance -= amt;
+            saveData(); updateUI();
+            alert(`Locked! Tell your friend the password: ${pass}`);
+            closeModals();
+        }
+
+        function claimCoins() {
+            let pass = document.getElementById('claimPass').value;
+            let pending = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+            let index = pending.findIndex(t => t.key === pass);
+
+            if(index !== -1) {
+                let amt = pending[index].amount;
+                userData.balance += amt;
+                pending.splice(index, 1);
+                localStorage.setItem(TRX_KEY, JSON.stringify(pending));
+                saveData(); updateUI();
+                alert(`Success! Received ${amt} ASL`);
+                closeModals();
+            } else alert("Wrong Password or No Coins Found!");
+        }
+
+        function enterApp() { document.getElementById('authScreen').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); updateUI(); }
+        function showPage(id, btn) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); }
+        function saveData() { localStorage.setItem('aslan_user', JSON.stringify(userData)); }
         function logout() { localStorage.clear(); location.reload(); }
-        setInterval(() => { if(user.energy < 1000) { user.energy += 5; updateUI(); saveData(); } }, 3000);
+        setInterval(() => { if(userData.energy < 1000) { userData.energy += 5; updateUI(); saveData(); } }, 3000);
     </script>
 </body>
 </html>
