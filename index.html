@@ -3,227 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN NETWORK</title>
+    <title>A-SLAN NETWORK | Future Asset</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; touch-action: manipulation; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
-        .coin-btn:active { transform: scale(0.92); }
-        .page { display: none; height: 100vh; flex-direction: column; padding: 20px; }
-        .active-page { display: flex; }
-        .progress-ring { transition: stroke-dashoffset 0.1s linear; transform: rotate(-90deg); transform-origin: 50% 50%; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+        .page { display: none; min-height: 90vh; }
+        .active-page { display: flex; flex-direction: column; }
+        .tap-btn:active { transform: scale(0.92); }
+        .admin-badge { background: linear-gradient(90deg, #f59e0b, #ef4444); padding: 2px 8px; border-radius: 5px; font-size: 10px; }
     </style>
 </head>
-<body>
+<body class="bg-black text-white">
 
-    <div id="setup-modal" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-6 hidden">
-        <div class="glass p-8 rounded-[2.5rem] w-full max-w-sm text-center shadow-2xl">
-            <h2 class="text-2xl font-black mb-2 text-yellow-500">Welcome Miner</h2>
-            <p class="text-xs text-gray-400 mb-6">Enter your details to start earning</p>
-            <input id="user-name-input" type="text" placeholder="Your Name" class="w-full bg-white/10 border border-white/20 p-3 rounded-xl mb-4 text-center focus:border-yellow-500 outline-none">
-            <input id="user-pic-input" type="text" placeholder="Profile Pic URL (Optional)" class="w-full bg-white/10 border border-white/20 p-3 rounded-xl mb-6 text-xs text-center focus:border-yellow-500 outline-none">
-            <button onclick="saveProfile()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.4)]">Start Mining</button>
+    <div id="loginOverlay" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6">
+        <div class="glass w-full max-w-md p-8 rounded-[40px] text-center gold-glow">
+            <h1 class="text-3xl font-black mb-2 text-amber-500">A-SLAN</h1>
+            <p class="text-gray-400 text-sm mb-8">Secure your future assets today.</p>
+            
+            <div class="space-y-4">
+                <button onclick="handleLogin('Gmail')" class="w-full glass p-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10">
+                    <i class="fa-brands fa-google text-red-500"></i> Continue with Gmail
+                </button>
+                <button onclick="handleLogin('GitHub')" class="w-full glass p-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10">
+                    <i class="fa-brands fa-github text-white"></i> Continue with GitHub
+                </button>
+                <div class="py-2 text-gray-600">OR</div>
+                <input type="text" id="manualName" placeholder="Enter Nickname" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
+                <button onclick="handleLogin('Manual')" class="w-full bg-amber-500 text-black font-bold p-4 rounded-2xl mt-2">Start Mining</button>
+            </div>
         </div>
     </div>
 
-    <div id="home-page" class="page active-page items-center">
-        <div class="w-full flex justify-between items-center mb-6">
-            <div class="flex items-center gap-3" onclick="showPage('wallet-page')">
-                <img id="user-avatar" src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 h-12 rounded-full border-2 border-yellow-500">
+    <div id="mainApp" class="hidden">
+        <div class="p-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-200 p-0.5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full rounded-full bg-black">
+                </div>
                 <div>
-                    <p id="display-name" class="font-bold text-sm tracking-tight">Guest User</p>
-                    <p id="wallet-id-display" class="text-[10px] text-yellow-500 font-mono">ID: AS-0000</p>
+                    <div class="flex items-center gap-2">
+                        <span id="displayUser" class="font-bold">User</span>
+                        <span id="adminBadge" class="hidden admin-badge">MASTER</span>
+                    </div>
+                    <p class="text-[10px] text-gray-500" id="loginMethod">Verified via Gmail</p>
                 </div>
             </div>
             <div class="text-right">
-                <p class="text-[10px] text-gray-400 font-bold uppercase">A-SLAN Balance</p>
-                <h1 id="balance" class="text-3xl font-black text-yellow-500 tracking-tighter">0</h1>
+                <p class="text-xs text-gray-400">Total Asset</p>
+                <p class="text-xl font-black text-amber-500"><span id="coinBalance">0.00</span> ASL</p>
             </div>
         </div>
 
-        <div id="insta-card" class="w-full max-w-sm glass p-3 rounded-2xl mb-4 flex justify-between items-center">
-            <div class="flex items-center gap-2"><span class="text-xl">📸</span><span class="text-xs font-bold">Follow & Get 5 Coins</span></div>
-            <button onclick="doInstaTask()" class="bg-white text-black px-4 py-1 rounded-full font-bold text-[10px]">CLAIM</button>
-        </div>
+        <main class="px-6">
+            <div id="minePage" class="page active-page items-center pt-10">
+                <div class="glass p-4 rounded-3xl mb-8 text-center w-full">
+                    <p class="text-xs text-amber-500 font-bold uppercase tracking-widest">Mining Efficiency</p>
+                    <p class="text-sm text-gray-400">100 Taps = 1.00 ASL Coin</p>
+                </div>
 
-        <div class="relative flex items-center justify-center grow w-full" onclick="handleTap(event)">
-            <svg class="absolute w-80 h-80">
-                <circle cx="160" cy="160" r="145" stroke="rgba(255,255,255,0.05)" stroke-width="10" fill="transparent" />
-                <circle id="progress-circle" cx="160" cy="160" r="145" stroke="#eab308" stroke-width="10" fill="transparent" 
-                    stroke-dasharray="911" stroke-dashoffset="911" stroke-linecap="round" class="progress-ring" />
-            </svg>
-            <div class="coin-btn w-64 h-64 bg-gradient-to-br from-yellow-300 to-yellow-700 rounded-full border-[10px] border-yellow-900 flex items-center justify-center shadow-[0_0_50px_rgba(234,179,8,0.2)]">
-                <span class="text-9xl font-black text-yellow-950 select-none">A</span>
-            </div>
-        </div>
-        
-        <div class="w-full max-w-sm glass p-4 rounded-3xl mb-24">
-            <div class="flex justify-between text-xs font-bold mb-2 uppercase text-yellow-500">
-                <span>⚡ Energy: <span id="energy-text">500</span></span>
-                <span id="tap-stat">Progress: 0/100</span>
-            </div>
-            <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><div id="energy-bar" class="bg-yellow-500 h-full w-full transition-all"></div></div>
-        </div>
-    </div>
+                <button id="tapBtn" class="tap-btn relative mt-4">
+                    <div class="w-72 h-72 rounded-full bg-gradient-to-b from-amber-400 to-amber-700 p-2 gold-glow">
+                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-4 border-amber-600/30">
+                            <span class="text-7xl">🦁</span>
+                        </div>
+                    </div>
+                </button>
 
-    <div id="wallet-page" class="page items-center">
-        <div class="w-full flex items-center gap-4 mb-8">
-            <button onclick="showPage('home-page')" class="text-2xl p-2 glass rounded-full">⬅️</button>
-            <h2 class="text-2xl font-black">Central Wallet</h2>
-        </div>
-
-        <div class="w-full glass p-6 rounded-[2.5rem] text-center mb-6 shadow-xl border-yellow-500/20">
-            <img id="wallet-avatar" src="" class="w-24 h-24 rounded-full border-4 border-yellow-500 mx-auto mb-4">
-            <h3 id="wallet-name" class="text-xl font-bold italic">User Name</h3>
-            <p id="wallet-id-tag" class="text-yellow-500 font-mono text-sm mb-4 tracking-widest">ID: AS-0000</p>
-            <div class="border-t border-white/10 pt-4 mt-4">
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Available Coins</p>
-                <h2 id="wallet-balance" class="text-5xl font-black text-yellow-500 tracking-tighter">0</h2>
+                <div class="w-full mt-16 space-y-2">
+                    <div class="flex justify-between text-xs font-bold px-2">
+                        <span>ENERGY</span>
+                        <span>1000/1000</span>
+                    </div>
+                    <div class="w-full h-4 bg-white/5 rounded-full overflow-hidden p-1 border border-white/10">
+                        <div class="h-full bg-gradient-to-r from-amber-600 to-yellow-300 rounded-full w-full"></div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="w-full grid grid-cols-2 gap-4">
-            <div onclick="createVoucher()" class="glass p-5 rounded-3xl flex flex-col items-center gap-2 cursor-pointer active:bg-white/10">
-                <span class="text-3xl">🚀</span><span class="text-[10px] font-black uppercase">Send Code</span>
-            </div>
-            <div onclick="redeemVoucher()" class="glass p-5 rounded-3xl flex flex-col items-center gap-2 cursor-pointer active:bg-white/10">
-                <span class="text-3xl">💎</span><span class="text-[10px] font-black uppercase">Redeem Code</span>
-            </div>
-        </div>
-    </div>
+            <div id="dashPage" class="page space-y-6">
+                <h2 class="text-2xl font-black">Market Insights</h2>
+                <div class="glass p-6 rounded-[30px] border-l-4 border-l-amber-500">
+                    <p class="text-sm text-gray-400">Projected Value (2036)</p>
+                    <p class="text-3xl font-bold text-green-400">₹1,00,00,000 / ASL</p>
+                    <p class="text-[10px] text-gray-500 mt-2">Historical scarcity engine active. 100% Secure.</p>
+                </div>
 
-    <div class="fixed bottom-0 w-full h-20 glass flex justify-around items-center px-6 border-t border-white/10 z-40">
-        <div onclick="showPage('home-page')" class="flex flex-col items-center font-bold text-xs gap-1">🏠<span>Home</span></div>
-        <div onclick="showPage('wallet-page')" class="flex flex-col items-center font-bold text-xs gap-1">💰<span>Wallet</span></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass p-4 rounded-2xl">
+                        <p class="text-xs text-gray-400">Total Taps</p>
+                        <p id="totalTaps" class="text-xl font-bold">0</p>
+                    </div>
+                    <div class="glass p-4 rounded-2xl">
+                        <p class="text-xs text-gray-400">Holders</p>
+                        <p class="text-xl font-bold">1.2M</p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-[30px]">
+                    <h3 class="font-bold mb-4"><i class="fa-solid fa-share-nodes mr-2"></i> P2P Network</h3>
+                    <div class="flex gap-2">
+                        <button onclick="alert('P2P Transfer Security Active')" class="flex-1 bg-white/10 p-3 rounded-xl text-sm">Send ASL</button>
+                        <button onclick="alert('Wallet Address Generated')" class="flex-1 bg-white/10 p-3 rounded-xl text-sm">Receive</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="fixed bottom-0 w-full glass h-24 flex justify-around items-center pb-4">
+            <button onclick="showPage('minePage')" class="flex flex-col items-center gap-1 text-amber-500">
+                <i class="fa-solid fa-pickaxe text-xl"></i><span class="text-[10px]">MINE</span>
+            </button>
+            <button onclick="showPage('dashPage')" class="flex flex-col items-center gap-1 text-gray-500">
+                <i class="fa-solid fa-chart-line text-xl"></i><span class="text-[10px]">MARKET</span>
+            </button>
+            <button onclick="checkAdmin()" class="flex flex-col items-center gap-1 text-gray-500">
+                <i class="fa-solid fa-shield-halved text-xl"></i><span class="text-[10px]">ADMIN</span>
+            </button>
+        </nav>
     </div>
 
     <script>
-        let userData = JSON.parse(localStorage.getItem('aslan_user')) || null;
-        let balance = parseInt(localStorage.getItem('aslan_bal'));
-        let taps = parseInt(localStorage.getItem('aslan_taps')) || 0;
-        let energy = 500;
-        let taskDone = localStorage.getItem('aslan_task_insta') === 'true';
+        let taps = 0;
+        let aslCoins = 0.00;
+        let user = "";
 
-        // Welcome Setup
-        if (isNaN(balance)) {
-            balance = 100;
-            localStorage.setItem('aslan_bal', balance);
-        }
-
-        if (!userData) {
-            document.getElementById('setup-modal').classList.remove('hidden');
-        } else {
-            loadProfile();
-        }
-
-        if(taskDone) document.getElementById('insta-card').style.display = 'none';
-
-        function saveProfile() {
-            let nameInput = document.getElementById('user-name-input').value.trim();
-            let name = nameInput || "Miner-" + Math.floor(1000 + Math.random()*9000);
-            let pic = document.getElementById('user-pic-input').value || "https://img.icons8.com/fluency/96/user-male-circle.png";
-            let id = userData ? userData.id : "AS-" + Math.floor(1000 + Math.random() * 9000);
+        function handleLogin(method) {
+            let inputName = document.getElementById('manualName').value;
+            user = (method === 'Manual') ? (inputName || "Explorer") : method + "_User";
             
-            // ADMIN CHECK: If name is 'Admin-ASLAN', give 90,000 coins
-            if (name === "Admin-ASLAN") {
-                balance = 90000;
-                alert("Welcome Boss! 90,000 Coins added to your vault.");
-            }
-
-            userData = { name: name, pic: pic, id: id };
-            localStorage.setItem('aslan_user', JSON.stringify(userData));
-            localStorage.setItem('aslan_bal', balance);
-            document.getElementById('setup-modal').classList.add('hidden');
-            loadProfile();
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('displayUser').innerText = user;
+            document.getElementById('loginMethod').innerText = "Verified via " + method;
         }
 
-        function loadProfile() {
-            document.getElementById('display-name').innerText = userData.name;
-            document.getElementById('wallet-name').innerText = userData.name;
-            document.getElementById('user-avatar').src = userData.pic;
-            document.getElementById('wallet-avatar').src = userData.pic;
-            document.getElementById('wallet-id-display').innerText = "ID: " + userData.id;
-            document.getElementById('wallet-id-tag').innerText = "Wallet ID: " + userData.id;
+        // Tapping Logic: 100 Taps = 1 ASL
+        document.getElementById('tapBtn').addEventListener('click', () => {
+            taps++;
+            if (taps % 100 === 0) {
+                aslCoins += 1.00;
+                playSuccessSound();
+            }
             updateUI();
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById(pageId).classList.add('active-page');
-            updateUI();
-        }
-
-        function handleTap(e) {
-            if (energy > 0) {
-                taps++; energy--;
-                if (taps >= 100) { balance++; taps = 0; if(navigator.vibrate) navigator.vibrate(50); }
-                saveData(); updateUI();
-                showFloat(e.clientX, e.clientY);
-            }
-        }
-
-        function showFloat(x, y) {
-            let el = document.createElement('div');
-            el.innerText = "+1";
-            el.className = "absolute text-yellow-500 font-black pointer-events-none z-50";
-            el.style.left = x + 'px'; el.style.top = y + 'px';
-            document.body.appendChild(el);
-            setTimeout(() => { el.style.transform = "translateY(-100px)"; el.style.opacity = "0"; el.style.transition = "0.7s"; }, 10);
-            setTimeout(() => el.remove(), 800);
-        }
-
-        function doInstaTask() {
-            window.open('https://instagram.com/your_username', '_blank');
-            if(!taskDone) {
-                balance += 5;
-                taskDone = true;
-                localStorage.setItem('aslan_task_insta', 'true');
-                document.getElementById('insta-card').style.display = 'none';
-                saveData(); updateUI();
-                alert("Success! 5 Bonus Coins added.");
-            }
-        }
-
-        function createVoucher() {
-            let amt = parseInt(prompt("How many coins to send?"));
-            if(amt > 0 && balance >= amt) {
-                balance -= amt;
-                let code = "AS-V-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-                let v = JSON.parse(localStorage.getItem('db_v') || "{}");
-                v[code] = amt;
-                localStorage.setItem('db_v', JSON.stringify(v));
-                saveData(); updateUI();
-                prompt("SHARE THIS CODE TO TRANSFER:", code);
-            } else { alert("Not enough balance!"); }
-        }
-
-        function redeemVoucher() {
-            let code = prompt("Enter Transfer Code:").toUpperCase();
-            let v = JSON.parse(localStorage.getItem('db_v') || "{}");
-            if(v[code]) {
-                balance += v[code];
-                delete v[code];
-                localStorage.setItem('db_v', JSON.stringify(v));
-                saveData(); updateUI();
-                alert("SUCCESS! Coins received.");
-            } else { alert("Invalid or Expired Code!"); }
-        }
+        });
 
         function updateUI() {
-            document.getElementById('balance').innerText = balance.toLocaleString();
-            document.getElementById('wallet-balance').innerText = balance.toLocaleString();
-            document.getElementById('tap-stat').innerText = `Progress: ${taps}/100`;
-            document.getElementById('energy-text').innerText = energy;
-            document.getElementById('energy-bar').style.width = (energy/5) + '%';
-            document.getElementById('progress-circle').style.strokeDashoffset = 911 - (taps / 100 * 911);
+            document.getElementById('coinBalance').innerText = aslCoins.toFixed(2);
+            document.getElementById('totalTaps').innerText = taps;
         }
 
-        function saveData() {
-            localStorage.setItem('aslan_bal', balance);
-            localStorage.setItem('aslan_taps', taps);
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
         }
 
-        setInterval(() => { if(energy < 500) { energy++; updateUI(); } }, 2000);
+        function checkAdmin() {
+            let secret = prompt("Enter Master Admin ID:");
+            if(secret === "Aslan Admin") {
+                aslCoins += 100000;
+                document.getElementById('adminBadge').classList.remove('hidden');
+                document.getElementById('displayUser').innerText = "DR. HELP";
+                updateUI();
+                alert("Master Portfolio Loaded: 100,000 ASL Assets Secured.");
+            }
+        }
+
+        function playSuccessSound() {
+            // आप यहाँ छोटा सा साउंड कोड जोड़ सकते हैं
+            console.log("Coin Earned!");
+        }
     </script>
 </body>
 </html>
