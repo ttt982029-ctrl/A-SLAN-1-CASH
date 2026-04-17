@@ -3,230 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ASLAN-X | THE ULTIMATE ECOSYSTEM</title>
+    <title>ASLAN-X | ILLUMINATI ELITE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;900&display=swap');
         
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; perspective: 1000px; }
-        .luxury-gold { background: linear-gradient(145deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .premium-text { font-family: 'Cinzel', serif; background: linear-gradient(to bottom, #fcf6ba, #bf953f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* 3D Coin & Animation */
-        .coin-wrapper { transform-style: preserve-3d; transition: transform 0.1s; }
-        .aslan-coin {
-            width: 250px; height: 250px;
-            background: radial-gradient(circle at 30% 30%, #f3ba2f, #8c6a15);
-            border-radius: 50%;
-            border: 6px solid #b8860b;
-            box-shadow: 0 0 80px rgba(184, 134, 11, 0.4), inset 0 0 30px rgba(0,0,0,0.6);
+        /* THE ILLUMINATI 3D COIN */
+        .coin-base {
+            width: 260px; height: 260px;
+            background: radial-gradient(circle at 35% 35%, #ffd700, #b8860b, #443300);
+            border-radius: 50%; border: 6px solid #1a1a1a;
+            box-shadow: 0 0 60px rgba(184, 134, 11, 0.5), inset 0 0 40px rgba(0,0,0,0.8);
             display: flex; align-items: center; justify-content: center;
-            position: relative;
+            position: relative; cursor: pointer; transition: transform 0.05s;
         }
-        .aslan-coin:active { transform: scale(0.92) rotateX(15deg); }
+        .coin-base:active { transform: scale(0.94); }
+        .illuminati-logo { width: 180px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        /* PUBG Transitions */
-        #blackout { position: fixed; inset: 0; background: black; z-index: 10000; display: none; }
+        /* TAB NAVIGATION FIX */
+        .page-content { display: none; height: 100%; flex-direction: column; }
+        .page-active { display: flex; }
+
+        /* PREMIUM GLASS */
+        .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
         
-        /* Glass UI */
-        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: 20px; }
+        /* PUBG FADE OUT */
+        #fade-layer { position: fixed; inset: 0; background: black; z-index: 9999; display: none; }
         
-        .screen { display: none; height: 100%; flex-direction: column; }
-        .screen.active { display: flex; }
-        
-        .tap-pop { position: absolute; color: #f3ba2f; font-weight: 900; font-size: 30px; pointer-events: none; animation: flyUp 0.7s ease-out forwards; text-shadow: 0 0 10px #000; }
-        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
+        .tap-val { position: absolute; color: #ffd700; font-weight: 900; font-size: 32px; pointer-events: none; animation: fly 0.6s ease-out forwards; z-index: 100; }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
-    <audio id="audio-player" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3" type="audio/mpeg">
-    </audio>
+    <div id="fade-layer"></div>
 
-    <div id="blackout"></div>
-
-    <div id="login-screen" class="fixed inset-0 z-[5000] bg-black flex flex-col items-center justify-center p-8">
-        <h1 class="luxury-gold text-5xl font-black tracking-tighter mb-2 font-[Orbitron]">ASLAN-X</h1>
-        <p class="text-[9px] tracking-[0.6em] text-yellow-800 mb-12 font-bold uppercase">Authorized Access Only</p>
-        
+    <div id="screen-login" class="fixed inset-0 z-[5000] bg-black flex flex-col items-center justify-center p-8">
+        <h1 class="premium-text text-5xl font-black mb-10 tracking-widest">ASLAN-X</h1>
         <div class="w-full max-w-xs space-y-4">
-            <input type="text" id="user-id" placeholder="ADMIN ID" class="w-full bg-neutral-900/50 border border-yellow-900/30 p-4 rounded-xl outline-none focus:border-yellow-600">
-            <input type="password" id="user-pass" placeholder="SECRET KEY" class="w-full bg-neutral-900/50 border border-yellow-900/30 p-4 rounded-xl outline-none focus:border-yellow-600">
-            <button onclick="loginProcess()" class="w-full bg-gradient-to-r from-yellow-700 to-yellow-500 text-black font-black py-4 rounded-xl shadow-xl active:scale-95 transition-all">
-                INITIALIZE ECOSYSTEM
+            <input type="text" id="uid" placeholder="DECENTRALIZED ID" class="w-full bg-neutral-900/80 border border-neutral-800 p-4 rounded-xl outline-none focus:border-yellow-600">
+            <input type="password" id="upass" placeholder="ACCESS KEY" class="w-full bg-neutral-900/80 border border-neutral-800 p-4 rounded-xl outline-none focus:border-yellow-600">
+            <button onclick="doLogin()" class="w-full bg-gradient-to-b from-yellow-400 to-yellow-700 text-black font-black py-4 rounded-xl shadow-2xl active:scale-95 transition-all">
+                AUTHORIZE SESSION
             </button>
         </div>
     </div>
 
-    <div id="app-interface" class="hidden flex-grow flex flex-col h-full">
+    <div id="app-main" class="hidden flex-grow flex flex-col h-full overflow-hidden">
         
         <div class="p-6 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center"><i class="fas fa-crown text-black text-xs"></i></div>
+                <div class="w-10 h-10 glass flex items-center justify-center border-yellow-600/30">
+                    <i class="fas fa-eye text-yellow-500"></i>
+                </div>
                 <div>
-                    <p class="text-[8px] text-yellow-600 font-bold uppercase tracking-widest">Administrator</p>
-                    <p class="text-xs font-black">RANK #1</p>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Elite Member</p>
+                    <p class="text-xs font-black">@Admin_Aslan</p>
                 </div>
             </div>
-            <button><i class="fas fa-ellipsis-v text-gray-500"></i></button>
+            <button onclick="location.reload()" class="text-gray-500 hover:text-red-500"><i class="fas fa-power-off"></i></button>
         </div>
 
-        <div class="text-center">
-            <p class="text-gray-500 text-[10px] font-bold tracking-[0.3em] uppercase mb-1">Total Staked Assets</p>
-            <h1 id="main-balance" class="text-6xl font-black italic tracking-tighter">0</h1>
-            <p class="text-green-500 text-[9px] font-bold mt-2 animate-pulse uppercase tracking-widest">
-                <i class="fas fa-microchip"></i> Auto-Mining: 150 ASLN/H
-            </p>
+        <div class="text-center py-4">
+            <p class="text-[10px] text-yellow-600 font-bold uppercase tracking-widest mb-1">Illuminati Reserve</p>
+            <div class="flex items-center justify-center gap-2">
+                <span class="text-yellow-500 text-2xl">$</span>
+                <h1 id="balance" class="text-6xl font-black italic tracking-tighter">0</h1>
+            </div>
+            <div class="text-[9px] text-green-500 font-bold mt-2"><i class="fas fa-server animate-pulse"></i> MINING ACTIVE: +85/SEC</div>
         </div>
 
         <div class="flex-grow overflow-y-auto px-6 py-4">
             
-            <div id="screen-tap" class="screen active flex items-center justify-center">
-                <div class="coin-wrapper" id="tap-target">
-                    <div class="aslan-coin">
-                        <img src="https://img.icons8.com/color/250/000000/triangle.png" class="absolute w-44 z-10 pointer-events-none drop-shadow-lg">
-                        
-                        <img src="https://img.icons8.com/color/180/000000/lion.png" class="absolute opacity-5 w-48 pointer-events-none">
+            <div id="page-exchange" class="page-content page-active flex items-center justify-center">
+                <div id="tap-target" class="coin-base">
+                    <img src="https://img.icons8.com/color/500/000000/triangle.png" class="illuminati-logo pointer-events-none">
+                    <div class="absolute inset-0 rounded-full bg-black/10"></div>
+                </div>
+            </div>
+
+            <div id="page-rank" class="page-content flex-col gap-4">
+                <h2 class="premium-text text-xl text-center mb-4">Global Hierarchy</h2>
+                <div class="glass p-5 flex justify-between items-center border-yellow-500/40">
+                    <span class="text-yellow-500 font-bold">#1 YOU (Admin)</span>
+                    <span id="rank-bal-u" class="font-mono text-yellow-500 font-bold text-lg">1,000,000</span>
+                </div>
+                <div class="glass p-4 flex justify-between items-center opacity-40">
+                    <span>#2 Satoshi_Shadow</span>
+                    <span class="font-mono">920,450</span>
+                </div>
+                <div class="glass p-4 flex justify-between items-center opacity-20">
+                    <span>#3 Rothschild_AI</span>
+                    <span class="font-mono">450,200</span>
+                </div>
+            </div>
+
+            <div id="page-wallet" class="page-content flex-col gap-4">
+                <div class="glass p-6 space-y-5">
+                    <h3 class="text-yellow-500 font-bold text-xs tracking-widest">P2P ENCRYPTED TRANSFER</h3>
+                    <div>
+                        <label class="text-[9px] text-gray-500">RECIPIENT CODE</label>
+                        <input type="text" id="tx-id" placeholder="ID: X-999-ASLAN" class="w-full bg-black border border-white/5 p-4 rounded-xl mt-1 outline-none text-sm">
                     </div>
-                </div>
-            </div>
-
-            <div id="screen-rank" class="screen flex-col gap-3">
-                <h2 class="text-center text-yellow-600 font-bold mb-4 font-[Orbitron]">LEADERBOARD</h2>
-                <div class="glass-panel p-4 flex justify-between border-yellow-600/50">
-                    <span class="font-bold text-yellow-500">#1 YOU (Admin)</span>
-                    <span class="font-mono" id="rank-1-bal">1,000,000</span>
-                </div>
-                <div class="glass-panel p-4 flex justify-between opacity-40">
-                    <span>#2 Satoshi_X</span>
-                    <span class="font-mono">890,420</span>
-                </div>
-            </div>
-
-            <div id="screen-wallet" class="screen flex-col">
-                <div class="glass-panel p-6 space-y-4">
-                    <h3 class="text-yellow-500 font-bold uppercase text-xs tracking-widest">P2P Transfer</h3>
-                    <input type="text" id="friend-id" placeholder="RECIPIENT CODE" class="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none text-sm">
-                    <input type="number" id="send-qty" placeholder="AMOUNT" class="w-full bg-black/50 border border-white/10 p-4 rounded-xl outline-none text-sm">
-                    <button onclick="sendCoins()" class="w-full bg-yellow-600 text-black font-bold py-4 rounded-xl">SEND NOW</button>
+                    <div>
+                        <label class="text-[9px] text-gray-500">TRANSFER AMOUNT</label>
+                        <input type="number" id="tx-amt" placeholder="0.00" class="w-full bg-black border border-white/5 p-4 rounded-xl mt-1 outline-none text-sm">
+                    </div>
+                    <button onclick="handleTx()" class="w-full bg-yellow-600 text-black font-black py-4 rounded-xl active:scale-95 transition-all">EXECUTE TRANSFER</button>
                 </div>
             </div>
 
         </div>
 
-        <div class="px-6 mb-4">
-            <div class="glass-panel p-4">
-                <div class="flex justify-between text-[10px] font-bold mb-2">
-                    <span class="text-yellow-600">ENERGY ⚡</span>
-                    <span id="energy-text">1000/1000</span>
-                </div>
-                <div class="w-full bg-black/50 h-1.5 rounded-full">
-                    <div id="energy-bar" class="bg-yellow-500 h-full w-full transition-all"></div>
-                </div>
+        <div class="p-6">
+            <div class="glass flex justify-around items-center py-4 px-2">
+                <button onclick="showPage('exchange')" class="nav-btn text-yellow-500 flex flex-col items-center gap-1">
+                    <i class="fas fa-adjust"></i><span class="text-[8px] font-bold">EXCHANGE</span>
+                </button>
+                <button onclick="showPage('rank')" class="nav-btn text-gray-600 flex flex-col items-center gap-1">
+                    <i class="fas fa-crown"></i><span class="text-[8px] font-bold">LEADERBOARD</span>
+                </button>
+                <button onclick="showPage('wallet')" class="nav-btn text-gray-600 flex flex-col items-center gap-1">
+                    <i class="fas fa-wallet"></i><span class="text-[8px] font-bold">WALLET</span>
+                </button>
             </div>
-        </div>
-
-        <div class="flex justify-around items-center bg-[#050505] border-t border-white/5 pb-10 pt-4">
-            <button onclick="changeScreen('tap')" class="flex flex-col items-center gap-1 text-yellow-500"><i class="fas fa-coins"></i><span class="text-[8px] font-bold uppercase">Exchange</span></button>
-            <button onclick="changeScreen('rank')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-trophy"></i><span class="text-[8px] font-bold uppercase">Rank</span></button>
-            <button onclick="changeScreen('wallet')" class="flex flex-col items-center gap-1 text-gray-500"><i class="fas fa-wallet"></i><span class="text-[8px] font-bold uppercase">Wallet</span></button>
         </div>
     </div>
 
     <script>
-        let balance = parseInt(localStorage.getItem('aslan_ultra_bal')) || 0;
-        let energy = 1000;
-        let isFirstTime = localStorage.getItem('aslan_first_boot') === null;
+        let balance = parseInt(localStorage.getItem('aslan_elite_bal')) || 0;
+        let isFirst = localStorage.getItem('aslan_init') === null;
 
-        function loginProcess() {
-            if(!document.getElementById('user-id').value) return alert("Enter Admin ID");
-            
-            // Start Luxury Music
-            const music = document.getElementById('audio-player');
-            music.volume = 0.2;
-            music.play();
-
-            const blackout = document.getElementById('blackout');
-            blackout.style.display = 'block';
+        function doLogin() {
+            if(!document.getElementById('uid').value) return alert("Identify Yourself");
+            const fl = document.getElementById('fade-layer');
+            fl.style.display = 'block';
 
             setTimeout(() => {
-                // Admin 1 Million Bonus
-                if(isFirstTime) {
+                if(isFirst) {
                     balance = 1000000;
-                    localStorage.setItem('aslan_first_boot', 'no');
+                    localStorage.setItem('aslan_init', 'true');
                 }
-                
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-interface').classList.remove('hidden');
-                updateUI();
-
+                document.getElementById('screen-login').style.display = 'none';
+                document.getElementById('app-main').classList.remove('hidden');
+                update();
                 setTimeout(() => {
-                    blackout.style.opacity = '0';
-                    setTimeout(() => blackout.style.display = 'none', 600);
+                    fl.style.opacity = '0';
+                    setTimeout(() => fl.style.display = 'none', 500);
                 }, 400);
             }, 800);
         }
 
-        function updateUI() {
-            document.getElementById('main-balance').innerText = balance.toLocaleString();
-            document.getElementById('rank-1-bal').innerText = balance.toLocaleString();
-            document.getElementById('energy-text').innerText = `${energy}/1000`;
-            document.getElementById('energy-bar').style.width = (energy / 10) + '%';
-            localStorage.setItem('aslan_ultra_bal', balance);
+        function update() {
+            document.getElementById('balance').innerText = balance.toLocaleString();
+            document.getElementById('rank-bal-u').innerText = balance.toLocaleString();
+            localStorage.setItem('aslan_elite_bal', balance);
         }
 
-        // Tap Mechanics
-        document.getElementById('tap-target').addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if(energy >= 5) {
-                balance += 250;
-                energy -= 5;
-                
-                const touch = e.touches[0];
-                const pop = document.createElement('div');
-                pop.className = 'tap-pop';
-                pop.innerText = '+250';
-                pop.style.left = touch.clientX + 'px';
-                pop.style.top = touch.clientY + 'px';
-                document.body.appendChild(pop);
-                setTimeout(() => pop.remove(), 700);
-                
-                updateUI();
-            }
-        });
-
-        // Navigation
-        function changeScreen(name) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-' + name).classList.add('active');
+        function showPage(id) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('page-active'));
+            document.getElementById('page-' + id).classList.add('page-active');
             
-            // Icon color change
-            document.querySelectorAll('nav button, .flex button').forEach(b => {
-                if(b.onclick && b.onclick.toString().includes(name)) b.classList.add('text-yellow-500');
-                else b.classList.replace('text-yellow-500', 'text-gray-500');
+            // UI Button Highlight
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                if(b.onclick.toString().includes(id)) b.classList.replace('text-gray-600', 'text-yellow-500');
+                else b.classList.replace('text-yellow-500', 'text-gray-600');
             });
         }
 
-        // Auto-Mining & Energy Recovery
-        setInterval(() => {
-            if(!document.getElementById('app-interface').classList.contains('hidden')) {
-                balance += 1; // Passive mining
-                if(energy < 1000) energy = Math.min(1000, energy + 5);
-                updateUI();
-            }
-        }, 1500);
+        document.getElementById('tap-target').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            balance += 500;
+            const touch = e.touches[0];
+            const t = document.createElement('div');
+            t.className = 'tap-val'; t.innerText = '+$500';
+            t.style.left = touch.clientX + 'px'; t.style.top = touch.clientY + 'px';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 600);
+            update();
+        });
 
-        function sendCoins() {
-            const amt = parseInt(document.getElementById('send-qty').value);
-            const id = document.getElementById('friend-id').value;
-            if(!id || amt > balance || amt <= 0) return alert("Transfer Blocked: Invalid Details");
-            balance -= amt;
-            updateUI();
-            alert(`Encrypted: ${amt} ASLN sent to ${id}`);
+        // Auto-Mining Simulation
+        setInterval(() => {
+            if(!document.getElementById('app-main').classList.contains('hidden')) {
+                balance += 85; update();
+            }
+        }, 1000);
+
+        function handleTx() {
+            const a = parseInt(document.getElementById('tx-amt').value);
+            const i = document.getElementById('tx-id').value;
+            if(!i || a > balance || a <= 0) return alert("DENIED: Invalid Credentials");
+            balance -= a; update();
+            alert("TRANSACTION VERIFIED: Aslan Assets Moved Successfully");
+            showPage('exchange');
         }
 
-        updateUI();
+        update();
     </script>
 </body>
 </html>
