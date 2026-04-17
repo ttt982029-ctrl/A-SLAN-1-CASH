@@ -3,197 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A-SLAN | Tiered Network</title>
+    <title>A-SLAN | Neon Genesis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .gold-glow { box-shadow: 0 0 60px rgba(245, 158, 11, 0.4); }
-        .page { display: none; height: 80vh; overflow-y: auto; padding-bottom: 120px; }
-        .active-page { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .nav-active { color: #f59e0b; border-bottom: 3px solid #f59e0b; padding-bottom: 5px; }
-        .premium-text { background: linear-gradient(90deg, #f59e0b, #fff, #f59e0b); background-size: 200% auto; animation: shine 2s linear infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-        @keyframes shine { to { background-position: 200% center; } }
+        :root { --neon: #f59e0b; --bg: #050505; }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; overflow: hidden; }
+        
+        /* The Master Hexagon Coin */
+        .master-coin {
+            width: 260px; height: 260px;
+            background: linear-gradient(135deg, #f59e0b, #78350f);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            position: relative; transition: all 0.1s;
+            box-shadow: 0 0 50px rgba(245, 158, 11, 0.4);
+        }
+        .master-coin:active { transform: scale(0.92) rotate(5deg); }
+        .inner-hex {
+            position: absolute; inset: 6px; background: #000;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex; items-center; justify-content: center;
+        }
+
+        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(245, 158, 11, 0.1); border-radius: 40px; }
+        .neon-text { text-shadow: 0 0 10px rgba(245, 158, 11, 0.8); }
+        .nav-btn { transition: all 0.3s; opacity: 0.4; }
+        .nav-btn.active { opacity: 1; color: var(--neon); transform: translateY(-5px); }
+        
+        /* Floating Dots Menu */
+        .dots-btn { width: 40px; height: 40px; display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; }
+        .dot { width: 4px; height: 4px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 5px var(--neon); }
+        
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+        .pulse { animation: pulse-gold 2s infinite; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="fixed inset-0 z-[100] bg-black flex items-center justify-center p-6 text-center">
-        <div class="glass w-full max-w-sm p-10 rounded-[50px] border-amber-500/20 border">
-            <h1 class="text-5xl font-black mb-1 text-amber-500 italic tracking-tighter">A-SLAN</h1>
-            <p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] mb-10 font-bold">Public Network Access</p>
-            <div class="space-y-4">
-                <input type="text" id="authName" placeholder="Username" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
-                <input type="password" id="authPass" placeholder="Security Code" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center outline-none focus:border-amber-500">
-                <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-4 rounded-3xl shadow-lg shadow-amber-500/20">LOG IN</button>
-            </div>
+    <div id="authScreen" class="fixed inset-0 z-[500] bg-black flex flex-col items-center justify-center p-8 transition-all duration-700">
+        <div class="mb-12 text-center">
+            <h1 class="text-6xl font-black italic tracking-tighter neon-text text-amber-500">A-SLAN</h1>
+            <p class="text-[10px] tracking-[0.6em] text-gray-500 font-bold">NEON GENESIS PROTOCOL</p>
+        </div>
+        <div class="glass-panel p-8 w-full max-w-sm space-y-4">
+            <input type="text" id="authName" placeholder="IDENTITY" class="w-full bg-white/5 p-5 rounded-2xl border border-white/10 outline-none focus:border-amber-500 text-center uppercase tracking-widest">
+            <input type="password" id="authPass" placeholder="PASSCODE" class="w-full bg-white/5 p-5 rounded-2xl border border-white/10 outline-none focus:border-amber-500 text-center tracking-widest">
+            <button onclick="handleAuth()" class="w-full bg-amber-500 text-black font-black p-5 rounded-3xl shadow-xl hover:bg-amber-400 transition-all">INITIALIZE</button>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden">
-        <header class="p-5 flex justify-between items-center glass m-4 rounded-[30px] border border-white/5 shadow-xl">
+    <div id="mainApp" class="hidden h-screen flex flex-col">
+        
+        <header class="p-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black shadow-lg"><i class="fa-solid fa-crown text-xl"></i></div>
+                <div class="w-12 h-12 glass-panel flex items-center justify-center border-amber-500/30">
+                    <i class="fa-solid fa-bolt-lightning text-amber-500 text-xl shadow-lg"></i>
+                </div>
                 <div>
-                    <p id="topName" class="text-xs font-black uppercase text-white tracking-widest"></p>
-                    <span id="rankBadge" class="text-[9px] font-black text-amber-500 uppercase italic">MINER</span>
+                    <h2 id="topName" class="text-sm font-black italic tracking-wider">---</h2>
+                    <div id="rankLabel" class="text-[8px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full inline-block font-bold">SCANNING...</div>
                 </div>
             </div>
-            <div class="text-right">
-                <p id="balance" class="text-2xl font-black text-amber-500 tracking-tighter">0</p>
+            
+            <div class="flex items-center gap-6">
+                <div class="text-right">
+                    <span class="text-[8px] text-gray-500 block font-bold">TOTAL ASSETS</span>
+                    <span id="balance" class="text-2xl font-black neon-text text-amber-500 tracking-tighter">0</span>
+                </div>
+                <button onclick="toggleMenu()" class="dots-btn glass-panel">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </button>
             </div>
         </header>
 
-        <main class="px-6">
-            <div id="minePage" class="page active-page text-center pt-8">
-                <p id="tapPowerText" class="text-[11px] text-amber-500/60 uppercase font-black tracking-[0.3em] mb-8 italic">Rate: 5 ASL/Tap</p>
-                <button onclick="tap()" class="relative active:scale-90 transition-transform outline-none">
-                    <div class="w-72 h-72 rounded-full bg-gradient-to-b from-amber-300 via-amber-600 to-amber-900 p-2 gold-glow">
-                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center border-4 border-amber-500/20"><span class="text-8xl">🦁</span></div>
+        <div id="dropMenu" class="hidden absolute top-24 right-6 z-[200] glass-panel w-48 overflow-hidden">
+            <button onclick="logout()" class="w-full p-4 text-left text-xs font-black text-red-500 hover:bg-red-500/10"><i class="fa-solid fa-power-off mr-3"></i>TERMINATE</button>
+        </div>
+
+        <main class="flex-1 px-6 flex flex-col items-center justify-center">
+            
+            <div id="minePage" class="page active-page w-full flex flex-col items-center">
+                <div class="mb-10 text-center">
+                    <div class="text-[10px] text-amber-500 font-black tracking-widest uppercase mb-2">Mining Velocity</div>
+                    <div id="rateValue" class="text-xs italic text-gray-400">0.00 ASL / CLICK</div>
+                </div>
+
+                <button onclick="tap()" class="master-coin pulse">
+                    <div class="inner-hex">
+                        <span class="text-8xl filter drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">🦁</span>
                     </div>
                 </button>
-                <div class="mt-16 glass p-6 rounded-[35px] border border-white/5">
-                    <div class="flex justify-between text-[10px] mb-3 font-black text-gray-500 uppercase tracking-widest"><span>Energy</span><span id="energyText">1000/1000</span></div>
-                    <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden"><div id="energyBar" class="h-full bg-amber-500 rounded-full w-full"></div></div>
+
+                <div class="w-full mt-16 max-w-sm glass-panel p-6 border-amber-500/5">
+                    <div class="flex justify-between items-end mb-4 font-black">
+                        <span class="text-[9px] text-gray-500 tracking-[0.2em]">ENERGY CORE</span>
+                        <span id="energyText" class="text-xs text-amber-500">1000/1000</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div id="energyBar" class="h-full bg-gradient-to-r from-amber-700 to-amber-400 rounded-full transition-all duration-300"></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="rankPage" class="page pt-4">
-                <h2 class="text-2xl font-black text-amber-500 mb-6 text-center italic tracking-widest">GLOBAL COUNCIL</h2>
-                <div id="leaderList" class="space-y-3"></div>
-            </div>
-
-            <div id="walletPage" class="page pt-4 space-y-4">
-                <div class="glass p-10 rounded-[45px] text-center border-b-4 border-amber-500/50">
-                    <p class="text-[10px] text-gray-400 font-bold uppercase mb-2">My Holdings</p>
-                    <h2 class="text-6xl font-black text-white italic" id="walletBal">0</h2>
-                </div>
-                <button onclick="logout()" class="w-full text-[9px] text-red-500 font-black uppercase opacity-40 mt-10 italic">Exit Network</button>
+            <div id="rankPage" class="page w-full space-y-4">
+                <h3 class="text-center text-amber-500 font-black italic tracking-widest mb-8 uppercase">Genesis Council</h3>
+                <div id="rankList" class="space-y-3"></div>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 w-full glass h-24 flex justify-around items-center rounded-t-[50px] border-t border-white/10 z-[200]">
-            <button onclick="showPage('minePage', this)" class="flex flex-col items-center gap-1 nav-active"><i class="fa-solid fa-bolt text-2xl"></i><span class="text-[9px] font-bold uppercase">Mine</span></button>
-            <button onclick="showPage('rankPage', this)" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-trophy text-2xl"></i><span class="text-[9px] font-bold uppercase">Rank</span></button>
-            <button onclick="showPage('walletPage', this)" class="flex flex-col items-center gap-1 text-gray-500"><i class="fa-solid fa-wallet text-2xl"></i><span class="text-[9px] font-bold uppercase">Wallet</span></button>
+        <button onclick="openPortal('send')" class="fixed right-6 bottom-32 w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 active:scale-90 border-t-2 border-white/30">
+            <i class="fa-solid fa-arrows-up-down-left-right text-black text-xl"></i>
+        </button>
+
+        <nav class="h-24 glass-panel m-4 mt-0 border-t-0 rounded-t-none flex justify-around items-center">
+            <button onclick="showPage('minePage', this)" class="nav-btn active flex flex-col items-center gap-1">
+                <i class="fa-solid fa-cube text-xl"></i><span class="text-[8px] font-black uppercase">Core</span>
+            </button>
+            <button onclick="showPage('rankPage', this)" class="nav-btn flex flex-col items-center gap-1">
+                <i class="fa-solid fa-crown text-xl"></i><span class="text-[8px] font-black uppercase">Council</span>
+            </button>
+            <button onclick="openPortal('receive')" class="nav-btn flex flex-col items-center gap-1">
+                <i class="fa-solid fa-satellite-dish text-xl"></i><span class="text-[8px] font-black uppercase">Sync</span>
+            </button>
         </nav>
     </div>
 
-    <script>
-        let userData = { name: "", pass: "", balance: 0, energy: 1000, position: 0 };
-        const REG_KEY = 'aslan_reg_order';
-        let registrationCount = parseInt(localStorage.getItem(REG_KEY)) || 0;
+    <div id="portalModal" class="hidden fixed inset-0 z-[600] bg-black/95 backdrop-blur-xl flex items-center justify-center p-8">
+        <div class="glass-panel p-10 w-full max-w-sm border-amber-500/40 text-center">
+            <h2 id="portalTitle" class="text-2xl font-black italic text-amber-500 mb-8 tracking-widest uppercase">SEND ASSET</h2>
+            <div id="portalInputGroup" class="space-y-6">
+                <div id="sendGroup">
+                    <input type="number" id="pAmt" placeholder="AMOUNT" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-bold mb-4 outline-none focus:border-amber-500">
+                    <input type="text" id="pKey" maxlength="3" placeholder="SECRET KEY (3 CHARS)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-black tracking-[1em] outline-none focus:border-amber-500 uppercase">
+                    <button onclick="executeSend()" class="w-full bg-amber-500 text-black font-black p-5 mt-6 rounded-2xl shadow-lg">LOCK TRANSFER</button>
+                </div>
+                <div id="receiveGroup" class="hidden">
+                    <input type="text" id="rKey" maxlength="3" placeholder="INPUT SECRET KEY" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-center font-black tracking-[1em] outline-none focus:border-amber-500 uppercase">
+                    <button onclick="executeReceive()" class="w-full bg-white text-black font-black p-5 mt-6 rounded-2xl shadow-lg">SYNC ASSETS</button>
+                </div>
+            </div>
+            <button onclick="closePortal()" class="mt-8 text-[9px] text-gray-500 font-black tracking-widest uppercase">Abort Sync</button>
+        </div>
+    </div>
 
-        window.onload = function() {
-            const saved = localStorage.getItem('aslan_user');
-            if(saved) { userData = JSON.parse(saved); enterApp(); }
+    <script>
+        let user = { name: "", pass: "", bal: 0, energy: 1000, pos: 0 };
+        const REG_KEY = 'aslan_genesis_count';
+        const TRX_KEY = 'aslan_genesis_trx';
+
+        window.onload = () => {
+            const saved = localStorage.getItem('aslan_user_master');
+            if(saved) { user = JSON.parse(saved); enterApp(); }
         }
 
-        function handleAuth() {
-            const name = document.getElementById('authName').value;
-            const pass = document.getElementById('authPass').value;
-            if(!name || !pass) return alert("Please enter details!");
+        function toggleMenu() { document.getElementById('dropMenu').classList.toggle('hidden'); }
 
-            // 1. SUPREME LEADER (Rank 1)
-            if(name === "DR. HELP" && pass === "143143") {
-                userData = JSON.parse(localStorage.getItem('aslan_user')) || { name, pass, balance: 10000000, energy: 1000, position: 1 };
-                if(registrationCount === 0) { registrationCount = 1; localStorage.setItem(REG_KEY, 1); }
+        function handleAuth() {
+            const n = document.getElementById('authName').value.toUpperCase();
+            const p = document.getElementById('authPass').value;
+            if(!n || !p) return;
+
+            if(n === "DR. HELP" && p === "143143") {
+                user = JSON.parse(localStorage.getItem('aslan_user_master')) || { name: n, pass: p, bal: 10000000, energy: 1000, pos: 1 };
             } else {
-                // 2. NEW USERS (Registration Logic)
-                const savedUser = JSON.parse(localStorage.getItem('aslan_user'));
-                if(savedUser && savedUser.name === name) {
-                    userData = savedUser;
-                } else {
-                    registrationCount++;
-                    localStorage.setItem(REG_KEY, registrationCount);
-                    
-                    let pos = registrationCount;
-                    let bonus = 0;
-                    
-                    // Premium Benefits for Rank 2 & 3
-                    if(pos === 2 || pos === 3) {
-                        bonus = 100000;
-                        alert("🎖️ PREMIUM ACCOUNT ACTIVATED! 1,00,000 ASL Bonus.");
-                    } else {
-                        alert("👋 Welcome to A-SLAN Network!");
-                    }
-                    
-                    userData = { name, pass, balance: bonus, energy: 1000, position: pos };
-                }
+                let count = parseInt(localStorage.getItem(REG_KEY)) || 1;
+                count++; localStorage.setItem(REG_KEY, count);
+                let bonus = (count <= 3) ? 100000 : 0;
+                user = { name: n, pass: p, bal: bonus, energy: 1000, pos: count };
             }
             saveData(); enterApp();
         }
 
         function tap() {
-            if(userData.energy <= 0) return;
-            
-            let power = 5; // Normal Rate (Rank 4+)
-            if(userData.position === 1) power = 500; // Your Power
-            if(userData.position === 2 || userData.position === 3) power = 100; // Friend's Power
-            
-            userData.balance += power;
-            userData.energy -= 1;
+            if(user.energy <= 0) return;
+            let pwr = (user.pos === 1) ? 500 : (user.pos <= 3 ? 100 : 5);
+            user.bal += pwr; user.energy -= 1;
             updateUI(); saveData();
         }
 
         function updateUI() {
-            document.getElementById('topName').innerText = userData.name;
-            document.getElementById('balance').innerText = Math.floor(userData.balance).toLocaleString();
-            document.getElementById('walletBal').innerText = Math.floor(userData.balance).toLocaleString();
-            document.getElementById('energyBar').style.width = (userData.energy/10) + "%";
-            document.getElementById('energyText').innerText = userData.energy + "/1000";
-
+            document.getElementById('topName').innerText = user.name;
+            document.getElementById('balance').innerText = Math.floor(user.bal).toLocaleString();
+            document.getElementById('energyBar').style.width = (user.energy/10) + "%";
+            document.getElementById('energyText').innerText = user.energy + "/1000";
             let r = "CITIZEN";
-            let pwr = "Rate: 5 ASL/Tap";
-            if(userData.position === 1) { r = "SUPREME LEADER"; pwr = "Rate: 500 ASL/Tap"; }
-            else if(userData.position === 2) { r = "CHAIRMAN (PREMIUM)"; pwr = "Rate: 100 ASL/Tap"; }
-            else if(userData.position === 3) { r = "PM (PREMIUM)"; pwr = "Rate: 100 ASL/Tap"; }
+            if(user.pos === 1) r = "SUPREME FOUNDER";
+            else if(user.pos === 2) r = "EXECUTIVE DELEGATE";
+            else if(user.pos === 3) r = "PREMIUM MEMBER";
+            document.getElementById('rankLabel').innerText = r;
+            document.getElementById('rateValue').innerText = (user.pos === 1 ? 500 : (user.pos <= 3 ? 100 : 5)) + ".00 ASL / CLICK";
+        }
+
+        function openPortal(mode) {
+            document.getElementById('portalModal').classList.remove('hidden');
+            if(mode === 'send') {
+                document.getElementById('portalTitle').innerText = "SEND ASSET";
+                document.getElementById('sendGroup').classList.remove('hidden');
+                document.getElementById('receiveGroup').classList.add('hidden');
+            } else {
+                document.getElementById('portalTitle').innerText = "SYNC ASSET";
+                document.getElementById('sendGroup').classList.add('hidden');
+                document.getElementById('receiveGroup').classList.remove('hidden');
+            }
+        }
+        function closePortal() { document.getElementById('portalModal').classList.add('hidden'); }
+
+        function executeSend() {
+            let amt = parseInt(document.getElementById('pAmt').value);
+            let key = document.getElementById('pKey').value.toUpperCase();
+            if(amt > user.bal || key.length !== 3) return alert("System Error: Check Amount/Key");
             
-            document.getElementById('rankBadge').innerText = r;
-            document.getElementById('tapPowerText').innerText = pwr;
+            let trx = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+            trx.push({ key, amt });
+            localStorage.setItem(TRX_KEY, JSON.stringify(trx));
+            
+            user.bal -= amt; saveData(); updateUI();
+            alert("ASSET LOCKED. SHARE KEY: " + key); closePortal();
         }
 
-        function updateLeaderboard() {
-            const list = document.getElementById('leaderList');
-            // Static mock for premium feel
-            let council = [
-                { name: "DR. HELP", balance: userData.position === 1 ? userData.balance : 10000000, pos: 1, title: "SUPREME" },
-                { name: "Elite_Friend_1", balance: userData.position === 2 ? userData.balance : 100000, pos: 2, title: "CHAIRMAN" },
-                { name: "Elite_Friend_2", balance: userData.position === 3 ? userData.balance : 100000, pos: 3, title: "PM" }
-            ];
-
-            list.innerHTML = council.map(p => `
-                <div class="glass p-5 rounded-3xl flex justify-between items-center ${p.pos === 1 ? 'border-amber-500 bg-amber-500/10' : 'border-white/5'} border">
-                    <div class="flex items-center gap-4">
-                        <span class="text-xs font-black text-gray-600">#${p.pos}</span>
-                        <div>
-                            <p class="text-sm font-black uppercase ${p.pos === 1 ? 'premium-text' : 'text-white'}">${p.name}</p>
-                            <p class="text-[9px] font-bold text-amber-500/70 uppercase italic">${p.title}</p>
-                        </div>
-                    </div>
-                    <p class="text-sm font-black text-amber-500">${Math.floor(p.balance).toLocaleString()} ASL</p>
-                </div>`).join('');
+        function executeReceive() {
+            let key = document.getElementById('rKey').value.toUpperCase();
+            let trx = JSON.parse(localStorage.getItem(TRX_KEY) || "[]");
+            let idx = trx.findIndex(t => t.key === key);
+            if(idx !== -1) {
+                user.bal += trx[idx].amt;
+                trx.splice(idx, 1);
+                localStorage.setItem(TRX_KEY, JSON.stringify(trx));
+                saveData(); updateUI(); alert("SYNC SUCCESSFUL!"); closePortal();
+            } else alert("Invalid Master Key");
         }
 
-        function enterApp() {
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            updateUI();
-        }
-
-        function showPage(id, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('nav button').forEach(b => { b.classList.add('text-gray-500'); b.classList.remove('nav-active'); });
-            document.getElementById(id).classList.add('active-page');
-            btn.classList.add('nav-active'); btn.classList.remove('text-gray-500');
-            if(id === 'rankPage') updateLeaderboard();
-        }
-
-        function saveData() { localStorage.setItem('aslan_user', JSON.stringify(userData)); }
-        function logout() { if(confirm("Are you sure?")) { localStorage.clear(); location.reload(); } }
-        setInterval(() => { if(userData.energy < 1000) { userData.energy += 5; updateUI(); saveData(); } }, 3000);
+        function enterApp() { document.getElementById('authScreen').classList.add('opacity-0'); setTimeout(() => { document.getElementById('authScreen').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); updateUI(); }, 500); }
+        function showPage(id, btn) { document.querySelectorAll('.page').forEach(p => p.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+        function saveData() { localStorage.setItem('aslan_user_master', JSON.stringify(user)); }
+        function logout() { localStorage.clear(); location.reload(); }
+        setInterval(() => { if(user.energy < 1000) { user.energy += 5; updateUI(); saveData(); } }, 3000);
     </script>
 </body>
 </html>
