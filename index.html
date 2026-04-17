@@ -2,262 +2,180 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ASLAN-X | INFINITY</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ASLAN-X | 3D CRYPTO MINER</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #fbbf24; --bg: #000; }
-        body { background: var(--bg); color: white; font-family: 'Outfit', sans-serif; margin: 0; }
-        * { -webkit-tap-highlight-color: transparent; user-select: none; transition: all 0.3s ease; }
-
-        /* Smooth Scrolling */
-        .app-container { height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
-
-        /* 6-Dot Menu */
-        .dots-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; cursor: pointer; }
-        .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 8px var(--gold); }
-
-        /* Mining Orb */
-        .orb-main {
-            width: 260px; height: 260px;
-            background: radial-gradient(circle, #fbbf24 0%, #78350f 70%, #000 100%);
-            border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
-            animation: morph 6s infinite alternate;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 50px rgba(251, 191, 36, 0.2);
-        }
-        @keyframes morph { 0% { border-radius: 38% 62% 63% 37%; } 100% { border-radius: 60% 40% 30% 70%; } }
-        .orb-main:active { transform: scale(0.9); }
-
-        /* Trading Table Glow */
-        .trade-row { border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .up { color: #2ecc71; } .down { color: #e74c3c; }
-
-        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
-        .hidden { display: none; }
+        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; perspective: 1000px; }
         
-        /* Floating Text */
-        .pop { position: absolute; color: white; font-weight: 900; animation: pUp 0.6s forwards; pointer-events: none; }
-        @keyframes pUp { to { opacity: 0; transform: translateY(-100px); } }
+        /* 3D Rotating Coin Effect */
+        .coin-3d {
+            width: 260px; height: 260px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+        .coin-3d:active { transform: rotateX(20deg) scale(0.9); }
+        
+        .coin-face {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #f3ba2f, #8c6a15);
+            border: 4px solid #f3ba2f;
+            box-shadow: 0 20px 50px rgba(243, 186, 47, 0.4), inset 0 0 30px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            backface-visibility: hidden;
+        }
+
+        /* Glassmorphism Trading Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        /* Moving Graph Simulation */
+        .graph-line {
+            height: 40px; width: 100%;
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+            mask-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,1), rgba(0,0,0,0));
+            animation: moveGraph 2s infinite linear;
+        }
+        @keyframes moveGraph { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .tap-float {
+            position: absolute; color: #22c55e; font-weight: 900; font-size: 32px;
+            pointer-events: none; animation: fly 0.7s ease-out forwards; text-shadow: 0 0 10px #22c55e;
+        }
+        @keyframes fly { 0% { opacity: 1; transform: translateZ(50px) translateY(0); } 100% { opacity: 0; transform: translateZ(100px) translateY(-150px); } }
+
+        #transition-layer { position: fixed; inset: 0; background: black; z-index: 1000; display: none; }
     </style>
 </head>
-<body>
+<body class="flex flex-col h-screen">
 
-    <div class="app-container" id="scrollBody">
-        
-        <header class="p-6 flex justify-between items-center sticky top-0 bg-black/50 backdrop-blur-md z-[100]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-black font-black">A</div>
-                <div class="flex flex-col">
-                    <span id="uNameTop" class="text-xs font-black italic">---</span>
-                    <span id="levelBadge" class="text-[8px] bg-amber-500/10 text-amber-500 px-2 rounded-full border border-amber-500/20 w-fit">LVL 1</span>
-                </div>
-            </div>
-            <div class="dots-6" onclick="toggleDashboard()">
-                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-            </div>
-        </header>
+    <div id="transition-layer"></div>
 
-        <section class="min-h-screen flex flex-col items-center justify-center p-6 relative">
-            <div class="text-center mb-10">
-                <p id="txt-asset" class="text-[9px] text-gray-500 font-bold tracking-[0.4em] uppercase mb-2">Decentralized Core</p>
-                <h2 id="balance" class="text-6xl font-black tracking-tighter">0</h2>
-            </div>
-
-            <div class="orb-main" id="tapZone">
-                <div class="text-6xl filter drop-shadow(0 0 10px #fff)">👁️‍🗨️</div>
-            </div>
-
-            <div class="w-full max-w-xs mt-12 px-2">
-                <div class="flex justify-between text-[10px] font-bold text-amber-500 mb-2 uppercase">
-                    <span id="txt-energy">Energy Reserves</span>
-                    <span id="engVal">1000/1000</span>
-                </div>
-                <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                    <div id="engBar" class="h-full bg-amber-500 w-full"></div>
-                </div>
-            </div>
-            <i class="fa-solid fa-chevron-down absolute bottom-10 animate-bounce text-gray-700"></i>
-        </section>
-
-        <section class="p-6 pb-32">
-            <h3 id="txt-market" class="text-xl font-black italic text-amber-500 mb-6">LIVE MARKET FLOW</h3>
-            
-            <div class="glass rounded-3xl p-4 overflow-hidden mb-8">
-                <div class="flex justify-between text-[9px] text-gray-500 font-bold mb-4 px-2">
-                    <span>ASSET PAIR</span>
-                    <span>PRICE</span>
-                    <span>CHANGE</span>
-                </div>
-                <div id="tradeList" class="space-y-4">
-                    </div>
-            </div>
-
-            <div class="glass rounded-3xl p-8 flex flex-col items-center text-center gap-4">
-                <div class="w-40 h-40 bg-white p-2 rounded-2xl">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ASLAN-X-USER" alt="QR" class="w-full h-full">
-                </div>
-                <p class="text-xs text-gray-400 font-medium">Your Network Identity Node</p>
-                <div class="bg-white/5 p-3 rounded-xl w-full text-[10px] font-mono border border-white/5 truncate">
-                    aslan-protocol.network/ref/node-7781
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <div id="dash" class="fixed inset-0 z-[2000] bg-black/95 translate-x-full transition-transform duration-500 p-8 flex flex-col">
-        <div class="flex justify-between items-center mb-10">
-            <h3 class="text-2xl font-black italic text-amber-500">PRO DASHBOARD</h3>
-            <button onclick="toggleDashboard()" class="text-3xl">&times;</button>
+    <div id="login-screen" class="fixed inset-0 z-[500] bg-black flex flex-col items-center justify-center p-8">
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-black tracking-tighter text-yellow-500 mb-2">ASLAN-X</h1>
+            <p class="text-gray-500 text-xs tracking-[0.3em]">3D CRYPTO TERMINAL</p>
         </div>
-        
-        <div class="space-y-6">
-            <div class="glass p-6 rounded-2xl border-l-4 border-amber-500">
-                <p id="txt-lang-label" class="text-[10px] text-gray-500 font-black mb-4 uppercase">System Language</p>
-                <select id="langSel" onchange="updateLang()" class="w-full bg-[#111] p-4 rounded-xl border border-white/10 outline-none font-bold">
-                    <option value="en">ENGLISH (US)</option>
-                    <option value="hi">HINDI (भारत)</option>
-                    <option value="bn">BENGALI (বাংলা)</option>
-                    <option value="es">ESPAÑOL</option>
-                </select>
-            </div>
-
-            <div class="glass p-6 rounded-2xl">
-                <p class="text-[10px] text-gray-500 font-black mb-4 uppercase">Profile Status</p>
-                <div class="flex items-center gap-4">
-                    <div id="proIcon" class="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-black font-black text-xl">D</div>
-                    <div>
-                        <p id="dashUser" class="font-black text-lg italic">---</p>
-                        <p id="dashLevel" class="text-[10px] text-amber-500">Level 1 Miner</p>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="logout()" class="w-full bg-red-500/10 text-red-500 font-black py-4 rounded-xl border border-red-500/20 mt-auto">TERMINATE SESSION</button>
-        </div>
-    </div>
-
-    <div id="auth" class="fixed inset-0 z-[3000] bg-black flex flex-col items-center justify-center p-8">
-        <div class="w-20 h-20 bg-amber-500 rounded-2xl flex items-center justify-center text-4xl mb-8 shadow-2xl">🦁</div>
         <div class="w-full max-w-xs space-y-4">
-            <input type="text" id="uID" placeholder="IDENTITY" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold">
-            <input type="password" id="uPass" placeholder="ACCESS CODE" class="w-full bg-[#111] p-5 rounded-2xl border border-white/10 text-center font-bold">
-            <button onclick="login()" class="w-full bg-amber-500 text-black font-black py-5 rounded-2xl">INITIALIZE CORE</button>
+            <input type="text" id="user" placeholder="DECENTRALIZED ID" class="w-full bg-neutral-900 border border-neutral-800 p-4 rounded-xl outline-none focus:border-yellow-600">
+            <input type="password" id="pass" placeholder="SECRET KEY" class="w-full bg-neutral-900 border border-neutral-800 p-4 rounded-xl outline-none focus:border-yellow-600">
+            <button onclick="enterEcosystem()" class="w-full bg-yellow-500 text-black font-bold py-4 rounded-xl shadow-lg shadow-yellow-500/20 active:scale-95 transition-all">
+                INITIALIZE TRADING
+            </button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden flex-grow flex flex-col p-4">
+        <div class="glass-card p-4 flex justify-between items-center mb-6">
+            <div>
+                <p class="text-[10px] text-gray-500 font-bold uppercase">Aslan/USDT</p>
+                <h3 class="text-green-500 font-mono font-bold">$0.000432 <span class="text-[8px]">+12.4%</span></h3>
+            </div>
+            <div class="w-24 overflow-hidden h-8 bg-black/40 rounded flex items-center">
+                <div class="graph-line"></div>
+            </div>
+            <button onclick="location.reload()"><i class="fas fa-ellipsis-v text-gray-600"></i></button>
+        </div>
+
+        <div class="text-center mb-4">
+            <h2 id="balance" class="text-5xl font-black tracking-tighter">0</h2>
+            <p class="text-yellow-500 text-[10px] font-bold tracking-[0.3em] uppercase mt-1">Staked Assets</p>
+        </div>
+
+        <div class="flex-grow flex items-center justify-center">
+            <div id="tap-target" class="coin-3d">
+                <div class="coin-face">
+                    <div class="text-center">
+                        <img src="https://img.icons8.com/ios-filled/100/ffffff/triangle.png" class="absolute inset-0 m-auto opacity-10 w-48">
+                        <img src="https://img.icons8.com/color/180/000000/lion.png" class="w-40 drop-shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card p-5 mb-4">
+            <div class="flex justify-between items-end mb-2">
+                <span class="text-[10px] font-bold tracking-widest text-gray-400">MINING POWER ⚡</span>
+                <span class="text-xs font-mono"><span id="energy">1000</span>/1000</span>
+            </div>
+            <div class="w-full bg-black/50 h-2 rounded-full border border-white/5">
+                <div id="energy-bar" class="bg-gradient-to-r from-yellow-600 to-yellow-300 h-full w-full shadow-[0_0_10px_#f3ba2f]"></div>
+            </div>
+        </div>
+
+        <div class="flex justify-around items-center py-2 opacity-60">
+            <div class="flex flex-col items-center gap-1 text-yellow-500"><i class="fas fa-layer-group"></i><span class="text-[8px] font-bold">TRADE</span></div>
+            <div class="flex flex-col items-center gap-1"><i class="fas fa-bolt"></i><span class="text-[8px] font-bold">FARM</span></div>
+            <div class="flex flex-col items-center gap-1"><i class="fas fa-wallet"></i><span class="text-[8px] font-bold">ASSETS</span></div>
         </div>
     </div>
 
     <script>
-        let db = { name: "", bal: 0, eng: 1000, lvl: 1, lang: "en" };
-        const KEY = 'aslan_infinity_v1';
+        let balance = parseInt(localStorage.getItem('aslan_3d_bal')) || 0;
+        let energy = 1000;
 
-        const langs = {
-            en: { asset: "Decentralized Asset", energy: "Energy Reserves", market: "Live Market Flow", lang: "System Language" },
-            hi: { asset: "विकेंद्रीकृत संपत्ति", energy: "ऊर्जा भंडार", market: "लाइव मार्केट फ्लो", lang: "सिस्टम भाषा" },
-            bn: { asset: "বিকেন্দ্রীভূত সম্পদ", energy: "এনার্জি রিজার্ভ", market: "লাইভ মার্কেট ফ্লো", lang: "সিস্টেম ভাষা" },
-            es: { asset: "Activo Descentralizado", energy: "Reservas de Energía", market: "Flujo de Mercado", lang: "Idioma del Sistema" }
-        };
-
-        function toggleDashboard() { document.getElementById('dash').classList.toggle('translate-x-full'); }
-
-        function login() {
-            const n = document.getElementById('uID').value.toUpperCase();
-            const p = document.getElementById('uPass').value;
-            if(!n || !p) return;
-
-            if(n === "DR. HELP" && p === "143143") {
-                db = { name: n, bal: 10000000, eng: 1000, lvl: 100, lang: "en" };
-            } else {
-                db = { name: n, bal: 0, eng: 1000, lvl: 1, lang: "en" };
-            }
-            document.getElementById('auth').classList.add('hidden');
-            save(); refresh();
+        function enterEcosystem() {
+            if(!document.getElementById('user').value) return alert("Enter ID");
+            const tl = document.getElementById('transition-layer');
+            tl.style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('game-screen').classList.remove('hidden');
+                updateUI();
+                setTimeout(() => {
+                    tl.style.opacity = '0';
+                    setTimeout(() => tl.style.display = 'none', 500);
+                }, 300);
+            }, 800);
         }
 
-        // --- Mining & Level System ---
-        document.getElementById('tapZone').addEventListener('touchstart', (e) => {
+        function updateUI() {
+            document.getElementById('balance').innerText = balance.toLocaleString();
+            document.getElementById('energy').innerText = energy;
+            document.getElementById('energy-bar').style.width = (energy / 10) + '%';
+            localStorage.setItem('aslan_3d_bal', balance);
+        }
+
+        document.getElementById('tap-target').addEventListener('touchstart', (e) => {
             e.preventDefault();
-            const tapPower = (db.name === "DR. HELP" || db.lvl >= 97) ? 500 : 10;
-            
-            for(let i=0; i<e.touches.length; i++) {
-                if(db.eng <= 0) break;
-                db.bal += tapPower; db.eng -= 1;
-                createPop(e.touches[i].pageX, e.touches[i].pageY, tapPower);
+            if (energy >= 5) {
+                balance += 25; // High value for trading feel
+                energy -= 5;
+                
+                // 3D Tilt Effect on Tap
+                const coin = document.getElementById('tap-target');
+                coin.style.transform = `rotateX(${Math.random() * 20 - 10}deg) rotateY(${Math.random() * 20 - 10}deg) scale(0.95)`;
+                setTimeout(() => coin.style.transform = '', 100);
+
+                const touch = e.touches[0];
+                const float = document.createElement('div');
+                float.className = 'tap-float';
+                float.innerText = '+$25';
+                float.style.left = touch.clientX + 'px';
+                float.style.top = touch.clientY + 'px';
+                document.body.appendChild(float);
+                setTimeout(() => float.remove(), 700);
+                
+                updateUI();
             }
-            updateLevel(); refresh(); save();
         });
 
-        function updateLevel() {
-            // Level 1 to 100 logic based on balance
-            let newLvl = Math.min(100, Math.floor(db.bal / 5000) + 1);
-            if(db.name === "DR. HELP") newLvl = 100;
-            db.lvl = newLvl;
-        }
-
-        function createPop(x, y, v) {
-            const d = document.createElement('div');
-            d.className = 'pop text-2xl font-black';
-            d.innerText = `+${v}`;
-            d.style.left = `${x-20}px`; d.style.top = `${y-60}px`;
-            document.body.appendChild(d);
-            setTimeout(() => d.remove(), 600);
-        }
-
-        function updateLang() {
-            db.lang = document.getElementById('langSel').value;
-            refresh(); save();
-        }
-
-        function refresh() {
-            document.getElementById('balance').innerText = Math.floor(db.bal).toLocaleString();
-            document.getElementById('uNameTop').innerText = db.name;
-            document.getElementById('dashUser').innerText = db.name;
-            document.getElementById('levelBadge').innerText = `LVL ${db.lvl}`;
-            document.getElementById('dashLevel').innerText = `Level ${db.lvl} Miner`;
-            document.getElementById('engVal').innerText = `${db.eng}/1000`;
-            document.getElementById('engBar').style.width = (db.eng/10) + "%";
-            
-            // Text Translation
-            const t = langs[db.lang];
-            document.getElementById('txt-asset').innerText = t.asset;
-            document.getElementById('txt-energy').innerText = t.energy;
-            document.getElementById('txt-market').innerText = t.market;
-            document.getElementById('txt-lang-label').innerText = t.lang;
-        }
-
-        // --- Live Trading Simulation ---
-        function genTrades() {
-            const pairs = ["BTC/ASL", "ETH/ASL", "BNB/ASL", "SOL/ASL", "XRP/ASL"];
-            const list = document.getElementById('tradeList');
-            list.innerHTML = pairs.map(p => {
-                const price = (Math.random() * 50000 + 1000).toFixed(2);
-                const change = (Math.random() * 5 - 2).toFixed(2);
-                const color = change >= 0 ? 'up' : 'down';
-                return `
-                    <div class="trade-row flex justify-between items-center py-2 px-2">
-                        <span class="text-[11px] font-black">${p}</span>
-                        <span class="text-[11px] font-mono">$${price}</span>
-                        <span class="text-[11px] font-black ${color}">${change >= 0 ? '▲' : '▼'} ${Math.abs(change)}%</span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
-        function logout() { localStorage.clear(); location.reload(); }
-
-        window.onload = () => {
-            const s = localStorage.getItem(KEY);
-            if(s) { db = JSON.parse(s); document.getElementById('auth').classList.add('hidden'); refresh(); }
-            setInterval(genTrades, 2000); // Live trade update every 2s
-            genTrades();
-        };
-
-        setInterval(() => { if(db.eng < 1000) { db.eng += 5; refresh(); save(); } }, 3000);
+        // Energy Recovery
+        setInterval(() => {
+            if (energy < 1000) {
+                energy = Math.min(1000, energy + 4);
+                updateUI();
+            }
+        }, 1200);
     </script>
 </body>
 </html>
