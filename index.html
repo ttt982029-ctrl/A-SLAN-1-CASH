@@ -1,215 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASLAN-X PRO</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-body { background:#000; color:#fff; font-family:sans-serif; }
-.gold { color:#f3ba2f; }
-
-.coin {
-    width:220px; height:220px;
-    border-radius:50%;
-    background: radial-gradient(circle,#f3ba2f,#222);
-    display:flex; align-items:center; justify-content:center;
-    transition:.1s;
-}
-
-.float {
-    position:absolute;
-    color:#f3ba2f;
-    font-weight:bold;
-    animation:float .8s forwards;
-}
-@keyframes float {
-    to { transform:translateY(-120px); opacity:0; }
-}
-
-.toast {
-    position:fixed;
-    bottom:90px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#111;
-    padding:10px 20px;
-    border-radius:10px;
-    border:1px solid #333;
-    font-size:12px;
-}
-</style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0a0a0a; color: #fff; }
+        .input-glow:focus { box-shadow: 0 0 10px rgba(243, 186, 47, 0.5); }
+    </style>
 </head>
+<body class="flex items-center justify-center min-h-screen p-6">
 
-<body>
+    <div id="loginScreen" class="w-full max-w-sm bg-[#121212] p-8 rounded-3xl border border-gray-800 shadow-2xl">
+        <h1 class="text-2xl font-bold gold text-yellow-500 mb-2 text-center">ASLAN-X LOGIN</h1>
+        <p class="text-gray-500 text-xs text-center mb-8">Enter your credentials to access the platform</p>
+        
+        <input id="passInput" type="password" placeholder="Enter Password (e.g. 143143)" 
+               class="input-glow w-full p-4 bg-[#0a0a0a] border border-gray-700 rounded-2xl text-white mb-6 outline-none transition-all">
+        
+        <button id="loginBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 rounded-2xl transition-all active:scale-95 mb-6">
+            LOGIN
+        </button>
 
-<div class="text-center p-4">
-    <h1 class="text-2xl gold font-bold">ASLAN-X PRO</h1>
-    <h2 id="user"></h2>
-    <h1 id="bal" class="text-4xl font-bold mt-4">0</h1>
-</div>
+        <div class="p-4 bg-red-900/10 border border-red-900/30 rounded-xl">
+            <p class="text-red-500 text-[10px] font-bold uppercase tracking-widest text-center">
+                ⚠️ Warning: Risk Involved
+            </p>
+            <p class="text-gray-400 text-[9px] mt-2 text-center leading-relaxed">
+                Trading involves significant risk of loss. Only trade with money you can afford to lose. Use of this platform is at your own discretion.
+            </p>
+        </div>
+    </div>
 
-<div class="flex justify-center mt-6">
-    <div id="coin" class="coin">TAP</div>
-</div>
+    <div id="app" class="hidden">
+        </div>
 
-<div class="p-6">
-    <input id="amt" type="number" placeholder="Amount" class="w-full p-3 bg-black border border-gray-700 rounded mb-3">
-    <button id="otpBtn" class="w-full bg-yellow-500 text-black p-3 rounded">Generate OTP</button>
-    <div id="otpBox" class="text-center mt-3 text-xl hidden"></div>
-</div>
-
-<div id="toast" class="toast hidden"></div>
-
-<script>
-
-// ================= CORE STATE =================
-const App = {
-    bal: 0,
-    isAdmin: false,
-    lastTap: 0,
-    otp: null,
-    otpExpiry: null
-};
-
-// ================= STORAGE SAFE =================
-const Storage = {
-    get(k, def=0){
-        try { return JSON.parse(localStorage.getItem(k)) ?? def; }
-        catch { return def; }
-    },
-    set(k,v){
-        localStorage.setItem(k, JSON.stringify(v));
-    }
-};
-
-// ================= TOAST =================
-function toast(msg){
-    const t = document.getElementById('toast');
-    t.innerText = msg;
-    t.classList.remove('hidden');
-    setTimeout(()=>t.classList.add('hidden'),2000);
-}
-
-// ================= INIT =================
-function init(){
-    const key = sessionStorage.getItem("key") || prompt("ENTER KEY");
-
-    if(!key) return location.reload();
-
-    sessionStorage.setItem("key", key);
-
-    // hashed check
-    const adminHash = "b9f6a5e8"; // fake hashed
-    if(hash(key) === adminHash){
-        App.isAdmin = true;
-    }
-
-    App.bal = Storage.get("bal",0);
-
-    document.getElementById("user").innerText =
-        App.isAdmin ? "@ADMIN" : "@USER_" + key.slice(0,4);
-
-    loopIncome();
-    update();
-}
-
-// ================= HASH =================
-function hash(str){
-    let h = 0;
-    for(let i=0;i<str.length;i++){
-        h = (h<<5) - h + str.charCodeAt(i);
-        h |= 0;
-    }
-    return Math.abs(h).toString(16);
-}
-
-// ================= UPDATE =================
-function update(){
-    document.getElementById("bal").innerText =
-        App.bal.toLocaleString();
-
-    Storage.set("bal", App.bal);
-}
-
-// ================= PASSIVE INCOME =================
-function loopIncome(){
-    setInterval(()=>{
-        const gain = App.isAdmin ? 500 : 1;
-        App.bal += gain;
-        update();
-    },3000);
-}
-
-// ================= TAP =================
-const coin = document.getElementById("coin");
-
-function tap(e){
-    const now = Date.now();
-
-    if(now - App.lastTap < 100) return; // anti spam
-    App.lastTap = now;
-
-    let gain = App.isAdmin ? 5000 : 1;
-
-    App.bal += gain;
-
-    // FX
-    const fx = document.createElement("div");
-    fx.className = "float";
-    fx.innerText = "+"+gain;
-    fx.style.left = (e.clientX || 150)+"px";
-    fx.style.top = (e.clientY || 300)+"px";
-    document.body.appendChild(fx);
-    setTimeout(()=>fx.remove(),800);
-
-    coin.style.transform = "scale(0.9)";
-    setTimeout(()=>coin.style.transform="scale(1)",100);
-
-    update();
-}
-
-coin.addEventListener("click", tap);
-coin.addEventListener("touchstart", tap);
-
-// ================= OTP =================
-document.getElementById("otpBtn").onclick = () => {
-
-    const amt = parseInt(document.getElementById("amt").value);
-
-    if(!amt || amt <= 0){
-        return toast("Invalid amount");
-    }
-
-    if(amt > App.bal){
-        return toast("Insufficient balance");
-    }
-
-    App.bal -= amt;
-
-    App.otp = Math.floor(100000 + Math.random()*900000);
-    App.otpExpiry = Date.now() + 30000;
-
-    const box = document.getElementById("otpBox");
-    box.innerText = App.otp + " (30s)";
-    box.classList.remove("hidden");
-
-    toast("OTP Generated");
-
-    update();
-
-    setTimeout(()=>{
-        App.otp = null;
-        box.innerText = "EXPIRED";
-    },30000);
-};
-
-// ================= START =================
-init();
-
-</script>
-
+    <script>
+        document.getElementById("loginBtn").onclick = () => {
+            const pass = document.getElementById("passInput").value;
+            if(pass === "143143") {
+                document.getElementById("loginScreen").classList.add("hidden");
+                document.getElementById("app").classList.remove("hidden");
+                alert("Welcome, Admin!");
+            } else {
+                alert("Invalid Credentials!");
+            }
+        };
+    </script>
 </body>
 </html>
